@@ -43,7 +43,7 @@ def get_fill_color(label):
     else:
         return 'rgba(250,0,0,0.4)'
 
-fig = make_subplots(rows=4, cols=1, shared_xaxes=True, vertical_spacing = 0.05, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2",  "Lower Indicator 3"))
+fig = make_subplots(rows=4, cols=1, shared_xaxes=True, vertical_spacing = 0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2",  "Lower Indicator 3"))
 
 fig.append_trace(
     go.Candlestick(

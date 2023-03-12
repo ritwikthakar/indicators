@@ -190,7 +190,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["EMA Ribbons", "SMA Ribbons" ]
+indicators = ["EMA Ribbons", "SMA Ribbons","RSI" ]
 
 selected_indicators = st.multiselect('Select Indicators', indicators)
 

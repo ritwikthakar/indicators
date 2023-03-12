@@ -106,7 +106,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
         elif indicator == "TTM Trend":
             colors = ['green' if val > 0 else 'red' for val in df['TTM_TRND_6']]
-            fig.add_trace(go.Bar(x = df.index, y=df['TTM_TRND_6'], marker_color=colors, name = 'Trend'))
+            fig.add_trace(go.Bar(x = df.index, y=df['TTM_TRND_6'], marker_color=colors, name = 'Trend'), row = 5, col=1)
         elif indicator == "Rate of Change (ROC)":
             fig.add_trace(go.Scatter(x = df.index, y=df['ROC_10'], line_color = 'blue', name = 'ROC'), row = 5, col=1)
         elif indicator == "Commodity Channel Index (CCI)":

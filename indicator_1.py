@@ -263,7 +263,7 @@ def create_plot(df, indicators):
             df['tr2'] = abs(df['High'] - df['Close'].shift())
             df['tr3'] = abs(df['Low'] - df['Close'].shift())
             df['tr'] = df[['tr1', 'tr2', 'tr3']].max(axis=1)
-            df['atr'] = df['tr'].rolling(n).mean()
+            df['atr'] = df['tr'].rolling(14).mean()
             df['20atr'] = df['atr'].rolling(window=20).mean()
             fig.add_trace(go.Scatter(x=df.index, y=df['atr'], name='ATR', line=dict(color='purple', width=2)), row = 4, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['20atr'], name='Mean ATR', line=dict(color='orange', width=2)), row = 4, col = 1)

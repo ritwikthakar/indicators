@@ -40,7 +40,7 @@ def create_plot(df, indicators):
         elif indicator == '13EMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=13, adjust=False).mean(), name='13EMA', line=dict(color='blue', width=2)), row=1, col=1)
         elif indicator == '21EMA':
-            fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=21, adjust=False).mean(), name='21EMA', line=dict(color='orange', width=2)), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=21, adjust=False).mean(), name='21EMA', line=dict(color='pink', width=2)), row=1, col=1)
         elif indicator == '50EMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=50, adjust=False).mean(), name='50EMA', line=dict(color='green', width=2)), row=1, col=1)
         elif indicator == '200EMA':

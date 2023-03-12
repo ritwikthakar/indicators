@@ -276,7 +276,7 @@ def create_plot(df, indicators):
             df['plus_di'] = 100 * (df['plus_dm'] / df['atr']).ewm(span=14, adjust=False).mean()
             df['minus_di'] = 100 * (df['minus_dm'] / df['atr']).ewm(span=14, adjust=False).mean()
             df['dx'] = 100 * (abs(df['plus_di'] - df['minus_di']) / (df['plus_di'] + df['minus_di'])).ewm(span=14, adjust=False).mean()
-            df['adx'] = df['dx'].ewm(span=n, adjust=False).mean()
+            df['adx'] = df['dx'].ewm(span=14, adjust=False).mean()
             fig.add_trace(go.Scatter(x=df.index, y=df['adx'], name='ADX', line=dict(color='blue', width=2)), row = 5, col = 1)
         elif indicator == 'Supertrend (Default)':
             def Supertrend(df, atr_period, multiplier):

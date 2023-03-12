@@ -100,9 +100,8 @@ def create_plot(df, indicators):
         elif indicator == "Squeeze Momentum Indicator":
             colors = ['green' if val > 0 else 'red' for val in df['SQZ_20_2.0_20_1.5']]
             fig.add_trace(go.Bar(x = df.index, y=df['SQZ_20_2.0_20_1.5'], marker_color=colors, name = 'Squeeze Momentum'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SQZ_NO'], mode = 'markers', marker = dict(color='blue', size=5), name = 'Normal Volatility'), row = 5, col =1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SQZ_OFF'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Low Volatility'), row = 5, col =1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SQZ_ON'], mode = 'markers', marker = dict(color='purple', size=5), name = 'High Volatility'),row = 5, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZ_OFF_20_2.0_20_1.5'] != 0].index, y=df[df['SQZ_OFF_20_2.0_20_1.5'] != 0], mode = 'markers', marker = dict(color='orange', size=5), name = 'Low Volatility'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZ_ON_20_2.0_20_1.5'] != 0].index, y=df[df['SQZ_ON_20_2.0_20_1.5'] != 0], mode = 'markers', marker = dict(color='purple', size=5), name = 'High Volatility'),row = 4, col =1)
         elif indicator == "ADX":
             fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
         elif indicator == "TTM Trend":

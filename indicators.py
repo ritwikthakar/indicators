@@ -71,13 +71,13 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_200'], line_color = 'red', name = '200 EMA'), row =1, col = 1)
+#             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_200'], line_color = 'red', name = '200 EMA'), row =1, col = 1)
         elif indicator == "SMA Ribbons":
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_5'], line_color = 'purple', name = '9 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_9'], line_color = 'blue', name = '9 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_50'], line_color = 'green', name = '50 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_100'], line_color = 'yellow', name = '100 SMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_200'], line_color = 'red', name = '200 SMA'), row =1, col = 1)
+#             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_200'], line_color = 'red', name = '200 SMA'), row =1, col = 1)
         elif indicator == "Supertrend":
             fig.add_trace(go.Scatter(x = df.index, y=df['SUPERTl_7_3.0'], line_color = 'green', name = 'Supertrend-L'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SUPERTs_7_3.0'], line_color = 'red', name = 'Supertrend-S'), row =1, col = 1)

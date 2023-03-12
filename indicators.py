@@ -104,6 +104,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['SQZPRO_ON_WIDE'], mode = 'markers', marker = dict(color='purple', size=5), name = 'High Volatility'), row = 4, col =1)
         elif indicator == "ADX":
             fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
+        elif indicator == "TTM Trend":
+            colors = ['green' if val > 0 else 'red' for val in df['TTM_TRND_6']]
+            fig.add_trace(go.Bar(x = df.index, y=df['TTM_TRND_6'], marker_color=colors, name = 'Trend'))
         elif indicator == "Rate of Change (ROC)":
             fig.add_trace(go.Scatter(x = df.index, y=df['ROC_10'], line_color = 'blue', name = 'ROC'), row = 5, col=1)
         elif indicator == "Commodity Channel Index (CCI)":
@@ -207,7 +210,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Bollinger Bands","EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Squeeze Momentum Indicator", "ADX", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
+indicators = ["Bollinger Bands","EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Squeeze Momentum Indicator", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators)
 

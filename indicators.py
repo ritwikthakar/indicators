@@ -28,10 +28,14 @@ df.ta.strategy("All")
 df.ta.ema(length=8, append=True)
 df.ta.ema(length=13, append=True)
 df.ta.ema(length=21, append=True)
+df.ta.ema(length=50, append=True)
+df.ta.ema(length=200, append=True)
 
+df.ta.sma(length=5, append=True)
 df.ta.sma(length=9, append=True)
 df.ta.sma(length=50, append=True)
 df.ta.sma(length=100, append=True)
+df.ta.sma(length=200, append=True)
 
 df.ta.bbands(close=df['Adj Close'], length=20, std=2, append=True)
 
@@ -63,19 +67,23 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['BBM_20_2.0'], line_color = 'orange', name = '20 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBL_20_2.0'], line_color = 'black', name = 'Bollinger Lower Bnad'), row =1, col = 1)
         elif indicator == "EMA Ribbons":
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'blue', name = '8 EMA', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'yellow', name = '13 EMA', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'red', name = '13 EMA', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'purple', name = '8 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_200'], line_color = 'red', name = '200 EMA'), row =1, col = 1)
         elif indicator == "SMA Ribbons":
-            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_9'], line_color = 'blue', name = '9 SMA', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_50'], line_color = 'green', name = '50 SMA', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_100'], line_color = 'purple', name = '100 SMA', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_5'], line_color = 'purple', name = '9 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_9'], line_color = 'blue', name = '9 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_50'], line_color = 'green', name = '50 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_100'], line_color = 'yellow', name = '100 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_200'], line_color = 'red', name = '200 SMA'), row =1, col = 1)
         elif indicator == "Supertrend":
-            fig.add_trace(go.Scatter(x = df.index, y=df['SUPERTl_7_3.0'], line_color = 'green', name = 'Supertrend-L', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['SUPERTs_7_3.0'], line_color = 'red', name = 'Supertrend-S', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SUPERTl_7_3.0'], line_color = 'green', name = 'Supertrend-L'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SUPERTs_7_3.0'], line_color = 'red', name = 'Supertrend-S'), row =1, col = 1)
         elif indicator == "Parabolic Stop & Reverse (PSAR)":
-            fig.add_trace(go.Scatter(x = df.index, y=df['PSARl_0.02_0.2'], mode = 'markers', marker = dict(color='green', size=2), name = 'PSAR-L', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['PSARs_0.02_0.2'], mode = 'markers', marker = dict(color='red', size=2), name = 'PSAR-S', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['PSARl_0.02_0.2'], mode = 'markers', marker = dict(color='green', size=2), name = 'PSAR-L'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['PSARs_0.02_0.2'], mode = 'markers', marker = dict(color='red', size=2), name = 'PSAR-S'), row =1, col = 1)
         elif indicator == "MACD":
             fig.add_trace(go.Scatter(x = df.index, y=df['MACD_12_26_9'], line_color = 'orange', name = 'macd'), row = 2, col=1)
             fig.add_trace(go.Scatter(x = df.index, y=df['MACDs_12_26_9'], line_color = 'deepskyblue', name='sig'), row =2, col = 1)
@@ -84,42 +92,42 @@ def create_plot(df, indicators):
         elif indicator == "RSI":
             fig.add_trace(go.Scatter(x = df.index, y=df['RSI_14'], line_color = 'green', name = 'RSI'), row =3, col = 1)
         elif indicator == "ATR":    
-            fig.add_trace(go.Scatter(x = df.index, y=df['ATRr_14'], line_color = 'red', name = 'ATR', visible='legendonly'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ATRr_14'], line_color = 'red', name = 'ATR'), row = 4, col =1)
         elif indicator == "ADX":
-            fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX', visible='legendonly'), row = 5, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
         elif indicator == "Rate of Change (ROC)":
             fig.add_trace(go.Scatter(x = df.index, y=df['ROC_10'], line_color = 'blue', name = 'ROC'), row = 5, col=1)
         elif indicator == "Commodity Channel Index (CCI)":
-            fig.add_trace(go.Scatter(x = df.index, y=df['CCI_14_0.015'], line_color = 'maroon', name = 'CCI', visible='legendonly'), row = 3, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['CCI_14_0.015'], line_color = 'maroon', name = 'CCI'), row = 3, col=1)
         elif indicator == "Balance of Power (BOP)":
-            fig.add_trace(go.Scatter(x = df.index, y=df['BOP'], line_color = 'Brown', name = 'BOP', visible='legendonly'), row = 3, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['BOP'], line_color = 'Brown', name = 'BOP'), row = 3, col=1)
         elif indicator == "On Balance Volume (OBV)":
-            fig.add_trace(go.Scatter(x = df.index, y=df['OBV'], line_color = 'purple', name = 'OBV', visible='legendonly'), row = 3, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['OBV'], line_color = 'purple', name = 'OBV'), row = 3, col=1)
         elif indicator == "Srochastic RSI":
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSIk_14_14_3_3'], line_color = 'orange', name = 'Stochastic RSI %K'), row = 4, col=1)
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSId_14_14_3_3'], line_color = 'blue', name = 'Stochastic RSI %D'), row = 4, col=1)
         elif indicator == "Stochastic Oscillator":
-            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHk_14_3_3'], line_color = 'orange', name = 'Stochastic %K', visible='legendonly'), row = 4, col=1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D', visible='legendonly'), row = 4, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHk_14_3_3'], line_color = 'orange', name = 'Stochastic %K'), row = 4, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D'), row = 4, col=1)
         elif indicator == "Eleher's Sine Wave":
-            fig.add_trace(go.Scatter(x = df.index, y=df['EBSW_40_10'], line_color = 'blue', name='Sine Wave', visible='legendonly'), row =5, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EBSW_40_10'], line_color = 'blue', name='Sine Wave'), row =5, col = 1)
         elif indicator == "Ichimoku Cloud":
             
             # Plotting Ichimoku
             baseline = go.Scatter(x=df.index, y=df['IKS_26'], 
-                               line=dict(color='orange', width=2),visible='legendonly', name="Baseline")
+                               line=dict(color='orange', width=2), name="Baseline")
             
             conversion = go.Scatter(x=df.index, y=df['ITS_9'], 
-                              line=dict(color='blue', width=1),visible='legendonly', name="Conversionline")
+                              line=dict(color='blue', width=1), name="Conversionline")
             
             lagging = go.Scatter(x=df.index, y=df['ICS_26'], 
-                              line=dict(color='purple', width=2, dash='solid'),visible='legendonly', name="Lagging")
+                              line=dict(color='purple', width=2, dash='solid'), name="Lagging")
             
             span_a = go.Scatter(x=df.index, y=df['ISA_9'],
-                              line=dict(color='green', width=2, dash='solid'),visible='legendonly', name="Span A")
+                              line=dict(color='green', width=2, dash='solid'), name="Span A")
             
             span_b = go.Scatter(x=df.index, y=df['ISB_26'],
-                                line=dict(color='red', width=1, dash='solid'),visible='legendonly', name="Span B")
+                                line=dict(color='red', width=1, dash='solid'), name="Span B")
             
             # Add plots to the figure
             # fig7.add_trace(candle)
@@ -139,10 +147,10 @@ def create_plot(df, indicators):
             
             for df in dfs:
                 fig.add_traces(go.Scatter(x=df.index, y = df['ISA_9'],
-                                          line = dict(color='rgba(0,0,0,0)'), visible='legendonly'))
+                                          line = dict(color='rgba(0,0,0,0)')))
                 
                 fig.add_traces(go.Scatter(x=df.index, y = df['ISB_26'],
-                                          line = dict(color='rgba(0,0,0,0)'), visible='legendonly',
+                                          line = dict(color='rgba(0,0,0,0)'), 
                                           fill='tonexty', 
                                           fillcolor = get_fill_color(df['label'].iloc[0])))
     # Make it pretty
@@ -152,7 +160,7 @@ def create_plot(df, indicators):
         font_family='Monospace',
         font_color='#000000',
         font_size=20,
-        height=2000, width=1200,
+        height=1000, width=1200,
     )
     
     if i == '1d':
@@ -190,7 +198,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["EMA Ribbons", "SMA Ribbons","RSI" ]
+indicators = ["Bollinger Bands","EMA Ribbons", "SMA Ribbons", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "ADX", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators)
 

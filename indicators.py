@@ -63,9 +63,17 @@ def create_plot(df, indicators):
     )
     for indicator in indicators:
         if indicator == "Bollinger Bands":
-            fig.add_trace(go.Scatter(x = df.index, y=df['BBU_20_2.0'], line_color = 'black', name = 'Bollinger Upper Bnad'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['BBU_20_2.0'], line_color = 'black', name = 'Bollinger Upper Band'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBM_20_2.0'], line_color = 'black', name = '20 SMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['BBL_20_2.0'], line_color = 'black', name = 'Bollinger Lower Bnad'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['BBL_20_2.0'], line_color = 'black', name = 'Bollinger Lower Band'), row =1, col = 1)
+        elif indicator == "Keltner Channels":
+            fig.add_trace(go.Scatter(x = df.index, y=df['KCLe_20_2'], line_color = 'gray', name = 'Keltner Channel Lower Baad'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['KCBe_20_2'], line_color = 'gray', name = 'Keltner Channel Basis'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['KCUe_20_2'], line_color = 'gray', name = 'Keltner Channel Upper Band'), row =1, col = 1)
+        elif indicator == "Donchian Channels":
+            fig.add_trace(go.Scatter(x = df.index, y=df['DCL_20_20'], line_color = 'skyblue', name = 'Donchian Channel Lower Baad'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['DCM_20_20'], line_color = 'skyblue', name = 'Donchian Channel Basis'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['DCU_20_20'], line_color = 'skyblue', name = 'Donchian Channel Upper Band'), row =1, col = 1)            
         elif indicator == "EMA Ribbons":
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'purple', name = '8 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
@@ -97,6 +105,8 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['RSI_14'], line_color = 'green', name = 'RSI'), row =3, col = 1)
         elif indicator == "ATR":    
             fig.add_trace(go.Scatter(x = df.index, y=df['ATRr_14'], line_color = 'red', name = 'ATR'), row = 4, col =1)
+        elif indicator == "Chopiness Index":    
+            fig.add_trace(go.Scatter(x = df.index, y=df['CHOP_14_1_100'], line_color = 'blue', name = 'Choppiness Index'), row = 4, col =1)
         elif indicator == "Squeeze Momentum Indicator":
             colors = ['green' if val > 0 else 'red' for val in df['SQZ_20_2.0_20_1.5']]
             fig.add_trace(go.Bar(x = df.index, y=df['SQZ_20_2.0_20_1.5'], marker_color=colors, name = 'Squeeze Momentum'), row = 4, col =1)
@@ -210,7 +220,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Bollinger Bands","EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Squeeze Momentum Indicator", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
+indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators)
 

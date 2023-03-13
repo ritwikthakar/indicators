@@ -111,10 +111,10 @@ def create_plot(df, indicators):
             colors = ['green' if val > 0 else 'red' for val in df['SQZPRO_20_2.0_20_2_1.5_1']]
             fig.add_trace(go.Bar(x = df.index, y=df['SQZPRO_20_2.0_20_2_1.5_1'], marker_color=colors, name = 'Squeeze Momentum Pro'), row = 4, col =1)
             fig.add_trace(go.Scatter(x = df[df['SQZPRO_OFF'] != 0].index, y=df[df['SQZPRO_OFF'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='purple', size=5), name = 'Squeeze Off'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df[df['SQZPRO_NO'] != 0].index, y=df[df['SQZPRO_NO'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Squeeze On'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NORMAL'] != 0].index, y=df[df['SQZPRO_ON_NORMAL'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='pink', size=5), name = 'Normal Squeeze'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NARROW'] != 0].index, y=df[df['SQZPRO_ON_NARROW'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='yellow', size=5), name = 'Narrow Squeeze'), row = 4, col =1)
             fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_WIDE'] != 0].index, y=df[df['SQZPRO_ON_WIDE'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='blue', size=5), name = 'Wide Squeeze'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_NO'] != 0].index, y=df[df['SQZPRO_NO'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Squeeze On'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NORMAL'] != 0].index, y=df[df['SQZPRO_ON_NORMAL'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='tomato', size=5), name = 'Normal Squeeze'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NARROW'] != 0].index, y=df[df['SQZPRO_ON_NARROW'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Narrow Squeeze'), row = 4, col =1)
         elif indicator == "ADX":
             fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
         elif indicator == "TTM Trend":

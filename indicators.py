@@ -107,11 +107,14 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['ATRr_14'], line_color = 'red', name = 'ATR'), row = 4, col =1)
         elif indicator == "Chopiness Index":    
             fig.add_trace(go.Scatter(x = df.index, y=df['CHOP_14_1_100'], line_color = 'blue', name = 'Choppiness Index'), row = 4, col =1)
-        elif indicator == "Squeeze Momentum Indicator":
-            colors = ['green' if val > 0 else 'red' for val in df['SQZ_20_2.0_20_1.5']]
-            fig.add_trace(go.Bar(x = df.index, y=df['SQZ_20_2.0_20_1.5'], marker_color=colors, name = 'Squeeze Momentum'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df[df['SQZ_OFF'] != 0].index, y=df[df['SQZ_OFF'] != 0]['SQZ_20_2.0_20_1.5'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Low Volatility'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df[df['SQZ_ON'] != 0].index, y=df[df['SQZ_ON'] != 0]['SQZ_20_2.0_20_1.5'], mode = 'markers', marker = dict(color='blue', size=5), name = 'High Volatility'),row = 4, col =1)
+        elif indicator == "Squeeze Momentum Indicator Pro":
+            colors = ['green' if val > 0 else 'red' for val in df['SQZPRO_20_2.0_20_2_1.5_1']]
+            fig.add_trace(go.Bar(x = df.index, y=df['SQZPRO_20_2.0_20_2_1.5_1'], marker_color=colors, name = 'Squeeze Momentum Pro'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_OFF'] != 0].index, y=df[df['SQZPRO_OFF'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='purple', size=5), name = 'Squeeze Off'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_NO'] != 0].index, y=df[df['SQZPRO_NO'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Squeeze On'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NORMAL'] != 0].index, y=df[df['SQZPRO_ON_NORMAL'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='pink', size=5), name = 'Normal Squeeze'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NARROW'] != 0].index, y=df[df['SQZPRO_ON_NARROW'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='yellow', size=5), name = 'Narrow Squeeze'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_WIDE'] != 0].index, y=df[df['SQZPRO_ON_WIDE'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='blue', size=5), name = 'Wide Squeeze'), row = 4, col =1)
         elif indicator == "ADX":
             fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
         elif indicator == "TTM Trend":
@@ -220,7 +223,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
+indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators)
 

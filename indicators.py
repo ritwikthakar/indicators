@@ -22,6 +22,7 @@ st.header(f'{ticker.upper()} Technical Indicators')
 start = dt.datetime.today()-dt.timedelta(t)
 end = dt.datetime.today()
 df = yf.download(ticker, start, end, interval= i)
+df = df[df.index.dayofweek >= 5]
 
 df.ta.strategy("All")
 
@@ -311,7 +312,7 @@ def create_plot(df, indicators):
          # Make it pretty
         layout = go.Layout(
         xaxis_rangeslider_visible=False, 
-        xaxis_tradingcalendar=True,
+#         xaxis_tradingcalendar=True,
         plot_bgcolor='#efefef',
         # Font Families
         font_family='Monospace',

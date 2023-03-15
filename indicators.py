@@ -62,7 +62,19 @@ def create_plot(df, indicators):
         ), row=1, col=1
     )
     for indicator in indicators:
-        if indicator == "Bollinger Bands":
+        if indicator == "Volume Based Support & Resistance":
+            mean_volume = df['Volume'].mean()
+            support_level = df[df['Volume'] < mean_volume]['Close'].max()
+            resistance_level = df[df['Volume'] >= mean_volume]['Close'].min()
+            go.Scatter(x=[df.index[0], df.index[-1]],
+                          y=[support_level, support_level],
+                          name='Support',
+                          line=dict(color='green', width=1, dash='dash'))
+            go.Scatter(x=[df.index[0], df.index[-1]],
+                                         y=[resistance_level, resistance_level],
+                                         name='Resistance',
+                                         line=dict(color='red', width=1, dash='dash'))
+        elif indicator == "Bollinger Bands":
             fig.add_trace(go.Scatter(x = df.index, y=df['BBU_20_2.0'], line_color = 'black', name = 'Bollinger Upper Band'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBM_20_2.0'], line_color = 'black', name = '20 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBL_20_2.0'], line_color = 'black', name = 'Bollinger Lower Band'), row =1, col = 1)
@@ -238,9 +250,9 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
+indicators = ["Volume Based Support & Resistance", "Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
 
-default_options = ["Bollinger Bands","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Volume Based Support & Resistance","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 

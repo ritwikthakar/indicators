@@ -12,19 +12,86 @@ import datetime as dt
 import plotly.subplots as sp
 import plotly.graph_objs as go
 import streamlit as st
+import pandas_ta as ta
+from pandas_datareader import data as pdr
 
 ticker = st.sidebar.text_input('Enter Ticker', 'SPY')
 # t = st.sidebar.selectbox('Select Number of Days', ('1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max'))
 # i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1m','2m','5m','15m','30m','60m','90m','1h','1d','5d','1wk','1mo','3mo'))
 t = st.sidebar.selectbox('Select Number of Days', (180, 3000, 1000, 735, 400, 350, 252, 150, 90, 60, 45, 30, 15))
-i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1wk'))
+i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1wk', '1h','15m'))
 st.header(f'{ticker.upper()} Technical Analysis')
 
 start = dt.datetime.today()-dt.timedelta(t)
 end = dt.datetime.today()
 df = yf.download(ticker, start, end, interval= i)
 
+df.ta.strategy("All")
 
+df.ta.ema(length=8, append=True)
+df.ta.ema(length=13, append=True)
+df.ta.ema(length=21, append=True)
+df.ta.ema(length=50, append=True)
+df.ta.ema(length=200, append=True)
+
+df.ta.sma(length=5, append=True)
+df.ta.sma(length=9, append=True)
+df.ta.sma(length=50, append=True)
+df.ta.sma(length=100, append=True)
+df.ta.sma(length=200, append=True)
+
+# Impulse MACD
+# Define input variables
+length_ma = 34
+length_signal = 9
+
+# Define functions
+def calc_smma(src, length):
+    smma = []
+    for i in range(len(src)):
+        if i == 0:
+            smma.append(src[i])
+        else:
+            smma.append(((length - 1) * smma[-1] + src[i]) / length)
+    return smma
+
+def calc_zlema(src, length):
+    ema1 = []
+    ema2 = []
+    d = []
+    for i in range(len(src)):
+        if i == 0:
+            ema1.append(src[i])
+        else:
+            ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
+    for i in range(len(ema1)):
+        if i == 0:
+            ema2.append(ema1[i])
+        else:
+            ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
+    for i in range(len(ema1)):
+        d.append(ema1[i] - ema2[i])
+    return [ema1, ema2, d]
+
+# Calculate Impulse MACD
+src = (df['High'] + df['Low'] + df['Close']) / 3
+hi = calc_smma(df['High'], length_ma)
+lo = calc_smma(df['Low'], length_ma)
+mi = calc_zlema(src, length_ma)[0]
+md = []
+mdc = []
+for i in range(len(mi)):
+    if mi[i] > hi[i]:
+        md.append(mi[i] - hi[i])
+        mdc.append('lime')
+    elif mi[i] < lo[i]:
+        md.append(mi[i] - lo[i])
+        mdc.append('red')
+    else:
+        md.append(0)
+        mdc.append('orange')
+sb = calc_smma(md, length_signal)
+sh = [md[i] - sb[i] for i in range(len(md))]
 
 
 
@@ -40,7 +107,7 @@ def create_plot(df, indicators):
         elif indicator == '13EMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=13, adjust=False).mean(), name='13EMA', line=dict(color='blue', width=2)), row=1, col=1)
         elif indicator == '21EMA':
-            fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=21, adjust=False).mean(), name='21EMA', line=dict(color='pink', width=2)), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=21, adjust=False).mean(), name='21EMA', line=dict(color='orange', width=2)), row=1, col=1)
         elif indicator == '50EMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=50, adjust=False).mean(), name='50EMA', line=dict(color='green', width=2)), row=1, col=1)
         elif indicator == '200EMA':
@@ -53,6 +120,16 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].rolling(window=50).mean(), name='50SMA', line=dict(color='green', width=2)), row=1, col=1)
         elif indicator == '200SMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].rolling(window=200).mean(), name='200SMA', line=dict(color='red', width=2)), row=1, col=1)
+        elif indicator == "EMA Ribbons":
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'purple', name = '8 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
+        elif indicator == "SMA Ribbons":
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_5'], line_color = 'purple', name = '5 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_9'], line_color = 'blue', name = '9 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_50'], line_color = 'green', name = '50 SMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['SMA_100'], line_color = 'yellow', name = '100 SMA'), row =1, col = 1)
         elif indicator == 'Percent %B':
             def bollinger_band_percent_b(close_prices, window_size=20, num_std_dev=2):
                 rolling_mean = close_prices.rolling(window=window_size).mean()
@@ -258,26 +335,43 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index, y=df['Middle Band'], 
                             mode='lines', name='Middle Band', line=dict(color='black', width=2)))
         elif indicator == 'Average True Range (ATR)':
+            n = 14
             # calculate the Average True Range (ATR)
             df['tr1'] = abs(df['High'] - df['Low'])
             df['tr2'] = abs(df['High'] - df['Close'].shift())
             df['tr3'] = abs(df['Low'] - df['Close'].shift())
             df['tr'] = df[['tr1', 'tr2', 'tr3']].max(axis=1)
-            df['atr'] = df['tr'].rolling(14).mean()
+            df['atr'] = df['tr'].rolling(n).mean()
             df['20atr'] = df['atr'].rolling(window=20).mean()
             fig.add_trace(go.Scatter(x=df.index, y=df['atr'], name='ATR', line=dict(color='purple', width=2)), row = 4, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['20atr'], name='Mean ATR', line=dict(color='orange', width=2)), row = 4, col = 1)
         elif indicator == 'Average Directional Index (ADX)':
+            n = 14
             # calculate the Average Directional Index (ADX)
             df['up_move'] = df['High'] - df['High'].shift()
             df['down_move'] = df['Low'].shift() - df['Low']
             df['plus_dm'] = np.where((df['up_move'] > df['down_move']) & (df['up_move'] > 0), df['up_move'], 0)
             df['minus_dm'] = np.where((df['down_move'] > df['up_move']) & (df['down_move'] > 0), df['down_move'], 0)
-            df['plus_di'] = 100 * (df['plus_dm'] / df['atr']).ewm(span=14, adjust=False).mean()
-            df['minus_di'] = 100 * (df['minus_dm'] / df['atr']).ewm(span=14, adjust=False).mean()
-            df['dx'] = 100 * (abs(df['plus_di'] - df['minus_di']) / (df['plus_di'] + df['minus_di'])).ewm(span=14, adjust=False).mean()
-            df['adx'] = df['dx'].ewm(span=14, adjust=False).mean()
+            df['plus_di'] = 100 * (df['plus_dm'] / df['atr']).ewm(span=n, adjust=False).mean()
+            df['minus_di'] = 100 * (df['minus_dm'] / df['atr']).ewm(span=n, adjust=False).mean()
+            df['dx'] = 100 * (abs(df['plus_di'] - df['minus_di']) / (df['plus_di'] + df['minus_di'])).ewm(span=n, adjust=False).mean()
+            df['adx'] = df['dx'].ewm(span=n, adjust=False).mean()
             fig.add_trace(go.Scatter(x=df.index, y=df['adx'], name='ADX', line=dict(color='blue', width=2)), row = 5, col = 1)
+        elif indicator == "MACD 2":
+            def impulsive_macd(prices, short_period, long_period, signal_period):
+                prices = df['Close']
+                ema_short = prices.ewm(span=short_period, min_periods=short_period).mean()
+                ema_long = prices.ewm(span=long_period, min_periods=long_period).mean()
+                macd = ema_short - ema_long
+                signal_line = macd.ewm(span=signal_period, min_periods=signal_period).mean()
+                histogram = macd - signal_line
+                return pd.concat([macd, signal_line, histogram], axis=1, keys=['MACD', 'Signal', 'Histogram'])
+            prices = df['Close']
+            imp_macd = impulsive_macd(prices, short_period=12, long_period=26, signal_period=9)
+            line_colors = ['skyblue' if imp_macd.loc[date, 'MACD'] > imp_macd.loc[date, 'Signal'] else 'orange' for date in imp_macd.index]
+            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'], name='Impulsive MACD', marker_color=line_colors),row = 2, col=1)
+            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'purple',name='Imp MACD Signal Line'),row = 2, col=1)
+            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
         elif indicator == 'Supertrend (Default)':
             def Supertrend(df, atr_period, multiplier):
                 
@@ -492,8 +586,55 @@ def create_plot(df, indicators):
                          line = dict(color='blue', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df1['Final Upperband'], name='Supertrend Fast Upper Band',
                          line = dict(color='purple', width=2)))
-
-            
+        elif indicator == 'Regression Channels':
+            x = np.arange(len(df))
+            y = df['Close']
+            p = np.polyfit(x, y, 1)
+            slope = p[0]
+            intercept = p[1]
+            regression_line = slope * x + intercept
+            upper_line = slope * x + intercept + (np.std(y) * 2)
+            lower_line = slope * x + intercept - (np.std(y) * 2)
+            fig.add_trace(go.Scatter(x=df.index, y=upper_line, mode='lines', name='Upper Regression Channel',
+                         line=dict(color='red', width=2, dash='dash')))
+            fig.add_trace(go.Scatter(x=df.index, y=lower_line, mode='lines', name='Lower Regression Channel',
+                                     line=dict(color='green', width=2, dash='dash')))
+            fig.add_trace(go.Scatter(x=df.index, y=regression_line, mode='lines', name='Regression Line',
+                         line=dict(color='blue', width=2)))
+        elif indicator == "Squeeze Momentum Indicator Pro":
+            colors = ['green' if val > 0 else 'red' for val in df['SQZPRO_20_2.0_20_2_1.5_1']]
+            fig.add_trace(go.Bar(x = df.index, y=df['SQZPRO_20_2.0_20_2_1.5_1'], marker_color=colors, name = 'Squeeze Momentum Pro'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_OFF'] != 0].index, y=df[df['SQZPRO_OFF'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='purple', size=5), name = 'Squeeze Off'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_WIDE'] != 0].index, y=df[df['SQZPRO_ON_WIDE'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='blue', size=5), name = 'Wide Squeeze'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_NO'] != 0].index, y=df[df['SQZPRO_NO'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Squeeze On'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NORMAL'] != 0].index, y=df[df['SQZPRO_ON_NORMAL'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='tomato', size=5), name = 'Normal Squeeze'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NARROW'] != 0].index, y=df[df['SQZPRO_ON_NARROW'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Narrow Squeeze'), row = 4, col =1)
+        elif indicator == "Srochastic RSI":
+            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSIk_14_14_3_3'], line_color = 'orange', name = 'Stochastic RSI %K'), row = 4, col=1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSId_14_14_3_3'], line_color = 'blue', name = 'Stochastic RSI %D'), row = 4, col=1)
+        elif indicator == "Keltner Channels":
+            fig.add_trace(go.Scatter(x = df.index, y=df['KCLe_20_2'], line_color = 'gray', name = 'Keltner Channel Lower Baad'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['KCBe_20_2'], line_color = 'gray', name = 'Keltner Channel Basis'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['KCUe_20_2'], line_color = 'gray', name = 'Keltner Channel Upper Band'), row =1, col = 1)
+        elif indicator == "TTM Trend":
+            colors = ['green' if val > 0 else 'red' for val in df['TTM_TRND_6']]
+            fig.add_trace(go.Bar(x = df.index, y=df['TTM_TRND_6'], marker_color=colors, name = 'Trend'), row = 5, col=1)
+        elif indicator == "Rate of Change (ROC)":
+            fig.add_trace(go.Scatter(x = df.index, y=df['ROC_10'], line_color = 'blue', name = 'ROC'), row = 5, col=1)
+        elif indicator == "Commodity Channel Index (CCI)":
+            fig.add_trace(go.Scatter(x = df.index, y=df['CCI_14_0.015'], line_color = 'maroon', name = 'CCI'), row = 3, col=1)
+        elif indicator == "Balance of Power (BOP)":
+            fig.add_trace(go.Scatter(x = df.index, y=df['BOP'], line_color = 'Brown', name = 'BOP'), row = 3, col=1)
+        elif indicator == "On Balance Volume (OBV)":
+            fig.add_trace(go.Scatter(x = df.index, y=df['OBV'], line_color = 'purple', name = 'OBV'), row = 3, col=1)
+        elif indicator == "Impulse MACD":    
+            # Create Plotly figure
+            fig.add_trace(go.Scatter(x=df.index,y=[0] * len(df),name="MidLine",mode="lines",line=dict(color="gray")), row = 2, col=1)
+            fig.add_trace(go.Bar(x=df.index,y=md,name="ImpulseMACD",marker=dict(color=mdc)),row = 2, col=1)
+            fig.add_trace(go.Bar(x=df.index,y=sh,name="ImpulseHisto",marker=dict(color="blue")),row = 2, col=1)
+            fig.add_trace(go.Scatter(x=df.index,y=sb,name="ImpulseMACDCDSignal",mode="lines",line=dict(color="maroon")),row = 2, col=1)
+        elif indicator == "Chopiness Index":    
+            fig.add_trace(go.Scatter(x = df.index, y=df['CHOP_14_1_100'], line_color = 'blue', name = 'Choppiness Index'), row = 4, col =1)
                 
     # Make it pretty
     layout = go.Layout(
@@ -539,9 +680,12 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA','Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend','Parabolic Stop & Reverse (PSAR)', 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'RSI', 'MACD','Stochastic Oscillator','Average True Range (ATR)','Average Directional Index (ADX)' ]
+indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD" ]
 
-selected_indicators = st.multiselect('Select Indicators', indicators)
+default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+
+
+selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 
 
 create_plot(df, selected_indicators)

@@ -77,6 +77,7 @@ def create_plot(df, indicators):
             p = np.polyfit(x, y, 1)
             slope = p[0]
             intercept = p[1]
+            regression_line = slope * x + intercept
             upper_line = slope * x + intercept + (np.std(y) * 2)
             lower_line = slope * x + intercept - (np.std(y) * 2)
             fig.add_trace(go.Scatter(x=df.index, y=upper_line, mode='lines', name='Upper Regression Channel',

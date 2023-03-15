@@ -310,20 +310,15 @@ def create_plot(df, indicators):
                                           fillcolor = get_fill_color(df['label'].iloc[0])))
          # Make it pretty
         layout = go.Layout(
-            xaxis=dict(
-            title='Date',
-            rangeslider=dict(visible=False),
-            type='date',
-            tradingday=True # Display only trading days on the x-axis
-        ),            
-            plot_bgcolor='#efefef',
-            # Font Families
-            font_family='Monospace',
-            font_color='#000000',
-            font_size=20,
-            height=1000, width=1200,
-        )
-
+        xaxis_rangeslider_visible=False, 
+        xaxis_tradingcalendar=True,
+        plot_bgcolor='#efefef',
+        # Font Families
+        font_family='Monospace',
+        font_color='#000000',
+        font_size=20,
+        height=1000, width=1200,
+    )
 #     if i == '1d':
 #         fig.update_xaxes(
 #                 rangeslider_visible=False,

@@ -651,8 +651,8 @@ def create_plot(df, indicators):
                 rangeslider_visible=False,
                 rangebreaks=[
                     # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
                     dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-                    # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
                     ]
                         )

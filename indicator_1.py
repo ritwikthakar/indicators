@@ -215,8 +215,8 @@ def create_plot(df, indicators):
             rs = avg_gain / avg_loss
             rsi = 100 - (100 / (1 + rs))
             df['20RSI'] = rsi.rolling(window=20).mean()
-            fig.add_trace(go.Scatter(x=df.index, y=rsi, name='RSI', line=dict(color='green', width=2)), row=2, col=1)
-            fig.add_trace(go.Scatter(x=df.index, y=df['20RSI'], name='Mean RSI', line=dict(color='Orange', width=2)), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=rsi, name='RSI', line=dict(color='green', width=2)), row=3, col=1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['20RSI'], name='Mean RSI', line=dict(color='Orange', width=2)), row = 3, col = 1)
         elif indicator == 'MACD':
             # Calculate the MACD
             df['12EMA'] = df['Close'].ewm(span=12).mean()

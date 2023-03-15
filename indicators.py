@@ -315,7 +315,7 @@ def create_plot(df, indicators):
             rangeslider=dict(visible=False),
             type='date',
             tradingday=True # Display only trading days on the x-axis
-        )            
+        ),            
             plot_bgcolor='#efefef',
             # Font Families
             font_family='Monospace',

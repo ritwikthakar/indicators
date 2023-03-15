@@ -626,6 +626,8 @@ def create_plot(df, indicators):
         font_color='#000000',
         font_size=20,
         height=1000, width=1200)
+    
+    i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1h','15m'))
 
     if i == '1d':
         fig.update_xaxes(
@@ -639,10 +641,14 @@ def create_plot(df, indicators):
     )
     else:
         fig.update_xaxes(
-            rangeslider_visible=False,
-            rangebreaks=[dict(bounds=["sat", "mon"])]  # hide weekends
+        rangeslider_visible=True,
+        rangebreaks=[
+            # NOTE: Below values are bound (not single values), ie. hide x to y
+            dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
             dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-        )    
+            # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+        ]
+    )    
     fig.update_layout(layout)
     st.plotly_chart(fig)
 

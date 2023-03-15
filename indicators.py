@@ -136,6 +136,21 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D'), row = 4, col=1)
         elif indicator == "Eleher's Sine Wave":
             fig.add_trace(go.Scatter(x = df.index, y=df['EBSW_40_10'], line_color = 'blue', name='Sine Wave'), row =5, col = 1)
+        elif indicator == "Impulse MACD":
+            def impulsive_macd(df["Close"], short_period, long_period, signal_period):
+                prices = df['Close']
+                ema_short = prices.ewm(span=short_period, min_periods=short_period).mean()
+                ema_long = prices.ewm(span=long_period, min_periods=long_period).mean()
+                macd = ema_short - ema_long
+                signal_line = macd.ewm(span=signal_period, min_periods=signal_period).mean()
+                histogram = macd - signal_line
+                return pd.concat([macd, signal_line, histogram], axis=1, keys=['MACD', 'Signal', 'Histogram'])
+            imp_macd = impulsive_macd(df["Close"], short_period=12, long_period=26, signal_period=9)
+            colors = ['blue' if val > 0 else 'orange' for val in df['MACD']]
+            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'],marker_color=colors, showlegend = False, name='MACD impulse'),row = 2, col=1)
+            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'purple',name='Imp MACD Signal Line'),row = 2, col=1)
+            col = ['green' if val > 0 else 'red' for val in df['Histogram']]
+            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'],marker_color=col, showlegend = False, name='Imp MACD Histogram'),row = 2, col=1)
         elif indicator == "Ichimoku Cloud":
             
             # Plotting Ichimoku
@@ -223,7 +238,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Ichimoku Cloud"]
+indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
 
 default_options = ["Bollinger Bands","SMA Ribbons","Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 

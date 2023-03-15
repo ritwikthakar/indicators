@@ -66,10 +66,7 @@ def create_plot(df, indicators):
             mean_volume = df['Volume'].mean()
             support_level = df[df['Volume'] < mean_volume]['Close'].max()
             resistance_level = df[df['Volume'] >= mean_volume]['Close'].min()
-                        fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
-                          y=[support_level, support_level],
-                          name='Support',
-                          line=dict(color='green', width=1, dash='dash')))
+            fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]], y=[support_level, support_level], name='Support', line=dict(color='green', width=1, dash='dash')))
             fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
                                          y=[resistance_level, resistance_level],
                                          name='Resistance',

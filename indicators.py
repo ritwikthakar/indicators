@@ -9,7 +9,7 @@ from pandas_datareader import data as pdr
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import pandas_ta as ta
-import business_calendar as bc
+import business_calendar as bc, MO, TU, WE, TH, FR
 
 df = pd.DataFrame()
 
@@ -23,7 +23,7 @@ st.header(f'{ticker.upper()} Technical Indicators')
 start = dt.datetime.today()-dt.timedelta(t)
 end = dt.datetime.today()
 df = yf.download(ticker, start, end, interval= i)
-custom_calendar = bc.Weekly(days_of_week=(bc.BUSINESS_DAYS[0], bc.BUSINESS_DAYS[-1]))
+custom_calendar = bc()
 
 df.ta.strategy("All")
 

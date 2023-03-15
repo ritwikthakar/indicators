@@ -39,6 +39,58 @@ df.ta.sma(length=200, append=True)
 
 df.ta.bbands(close=df['Adj Close'], length=20, std=2, append=True)
 
+# Define input variables
+            length_ma = 34
+            length_signal = 9
+
+            # Define functions
+            def calc_smma(src, length):
+                smma = []
+                for i in range(len(src)):
+                    if i == 0:
+                        smma.append(src[i])
+                    else:
+                        smma.append(((length - 1) * smma[-1] + src[i]) / length)
+                return smma
+
+            def calc_zlema(src, length):
+                ema1 = []
+                ema2 = []
+                d = []
+                for i in range(len(src)):
+                    if i == 0:
+                        ema1.append(src[i])
+                    else:
+                        ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
+                for i in range(len(ema1)):
+                    if i == 0:
+                        ema2.append(ema1[i])
+                    else:
+                        ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
+                for i in range(len(ema1)):
+                    d.append(ema1[i] - ema2[i])
+                return [ema1, ema2, d]
+
+            # Calculate Impulse MACD
+            src = (df['High'] + df['Low'] + df['Close']) / 3
+            hi = calc_smma(df['High'], length_ma)
+            lo = calc_smma(df['Low'], length_ma)
+            mi = calc_zlema(src, length_ma)[0]
+            md = []
+            mdc = []
+            for i in range(len(mi)):
+                if mi[i] > hi[i]:
+                    md.append(mi[i] - hi[i])
+                    mdc.append('lime')
+                elif mi[i] < lo[i]:
+                    md.append(mi[i] - lo[i])
+                    mdc.append('red')
+                else:
+                    md.append(0)
+                    mdc.append('orange')
+            sb = calc_smma(md, length_signal)
+            sh = [md[i] - sb[i] for i in range(len(md))]
+            
 df.ta.ichimoku()
 
 def get_fill_color(label):
@@ -175,59 +227,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'], name='Impulsive MACD', marker_color=line_colors),row = 2, col=1)
             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'purple',name='Imp MACD Signal Line'),row = 2, col=1)
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
-        elif indicator == "Impulse MACD":
-            # Define input variables
-            length_ma = 34
-            length_signal = 9
-
-            # Define functions
-            def calc_smma(src, length):
-                smma = []
-                for i in range(len(src)):
-                    if i == 0:
-                        smma.append(src[i])
-                    else:
-                        smma.append(((length - 1) * smma[-1] + src[i]) / length)
-                return smma
-
-            def calc_zlema(src, length):
-                ema1 = []
-                ema2 = []
-                d = []
-                for i in range(len(src)):
-                    if i == 0:
-                        ema1.append(src[i])
-                    else:
-                        ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
-                for i in range(len(ema1)):
-                    if i == 0:
-                        ema2.append(ema1[i])
-                    else:
-                        ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
-                for i in range(len(ema1)):
-                    d.append(ema1[i] - ema2[i])
-                return [ema1, ema2, d]
-
-            # Calculate Impulse MACD
-            src = (df['High'] + df['Low'] + df['Close']) / 3
-            hi = calc_smma(df['High'], length_ma)
-            lo = calc_smma(df['Low'], length_ma)
-            mi = calc_zlema(src, length_ma)[0]
-            md = []
-            mdc = []
-            for i in range(len(mi)):
-                if mi[i] > hi[i]:
-                    md.append(mi[i] - hi[i])
-                    mdc.append('lime')
-                elif mi[i] < lo[i]:
-                    md.append(mi[i] - lo[i])
-                    mdc.append('red')
-                else:
-                    md.append(0)
-                    mdc.append('orange')
-            sb = calc_smma(md, length_signal)
-            sh = [md[i] - sb[i] for i in range(len(md))]
-
+        elif indicator == "Impulse MACD":    
             # Create Plotly figure
             fig.add_trace(
                 go.Scatter(
@@ -318,43 +318,43 @@ def create_plot(df, indicators):
         font_color='#000000',
         font_size=20,
         height=1000, width=1200,)
-#     if i == '1d':
-#         fig.update_xaxes(
-#                 rangeslider_visible=False,
-#                 rangebreaks=[
-#                     # NOTE: Below values are bound (not single values), ie. hide x to y
-#                     dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                     # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#                     ]
-#                         )
-#     elif i == '1wk':
-#         fig.update_xaxes(
-#                 rangeslider_visible=False,
-#                 rangebreaks=[
-#                     # NOTE: Below values are bound (not single values), ie. hide x to y
-#                     dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                     # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#                     ]
-#                         )
-#     else:
-#         fig.update_xaxes(
-#                 rangeslider_visible=False,
-#                 rangebreaks=[
-#                     # NOTE: Below values are bound (not single values), ie. hide x to y
-#                     dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                     dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#                     ]
-#                         )
+    if i == '1d':
+        fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                    # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
+    elif i == '1wk':
+        fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                    # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
+    else:
+        fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                    dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
         
-    fig.update_xaxes(
-    rangebreaks=[
-        dict(bounds=["sat", "mon"]), #hide weekends
-        dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
-    ]
-)  
+#     fig.update_xaxes(
+#     rangebreaks=[
+#         dict(bounds=["sat", "mon"]), #hide weekends
+#         dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
+#     ]
+# )  
     # Update options and show plot
     fig.update_layout(layout)
     st.plotly_chart(fig)

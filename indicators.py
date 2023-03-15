@@ -66,14 +66,14 @@ def create_plot(df, indicators):
             mean_volume = df['Volume'].mean()
             support_level = df[df['Volume'] < mean_volume]['Close'].max()
             resistance_level = df[df['Volume'] >= mean_volume]['Close'].min()
-            go.Scatter(x=[df.index[0], df.index[-1]],
+            fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
                           y=[support_level, support_level],
                           name='Support',
-                          line=dict(color='green', width=1, dash='dash'))
-            go.Scatter(x=[df.index[0], df.index[-1]],
+                          line=dict(color='green', width=1, dash='dash')))
+            fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
                                          y=[resistance_level, resistance_level],
                                          name='Resistance',
-                                         line=dict(color='red', width=1, dash='dash'))
+                                         line=dict(color='red', width=1, dash='dash')))
         elif indicator == "Bollinger Bands":
             fig.add_trace(go.Scatter(x = df.index, y=df['BBU_20_2.0'], line_color = 'black', name = 'Bollinger Upper Band'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBM_20_2.0'], line_color = 'black', name = '20 SMA'), row =1, col = 1)

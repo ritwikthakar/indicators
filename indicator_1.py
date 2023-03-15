@@ -617,14 +617,7 @@ def create_plot(df, indicators):
         elif indicator == "Chopiness Index":    
             fig.add_trace(go.Scatter(x = df.index, y=df['CHOP_14_1_100'], line_color = 'blue', name = 'Choppiness Index'), row = 4, col =1)
     
-    fig.update_xaxes(
-                rangeslider_visible=False,
-                rangebreaks=[
-                    # NOTE: Below values are bound (not single values), ie. hide x to y
-                        dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-                    ]
-                        )
+   
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -651,6 +644,15 @@ def create_plot(df, indicators):
                     # NOTE: Below values are bound (not single values), ie. hide x to y
                     dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
                     dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
+    
+    fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                        dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
                     ]
                         )

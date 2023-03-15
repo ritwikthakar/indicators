@@ -160,7 +160,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D'), row = 4, col=1)
         elif indicator == "Eleher's Sine Wave":
             fig.add_trace(go.Scatter(x = df.index, y=df['EBSW_40_10'], line_color = 'blue', name='Sine Wave'), row =5, col = 1)
-        elif indicator == "Impulse MACD":
+        elif indicator == "MACD 2":
             def impulsive_macd(prices, short_period, long_period, signal_period):
                 prices = df['Close']
                 ema_short = prices.ewm(span=short_period, min_periods=short_period).mean()
@@ -175,6 +175,97 @@ def create_plot(df, indicators):
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'], name='Impulsive MACD', marker_color=line_colors),row = 2, col=1)
             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'purple',name='Imp MACD Signal Line'),row = 2, col=1)
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
+        elif indicator == "Impulse MACD":
+            # Define input variables
+            length_ma = 34
+            length_signal = 9
+
+            # Define functions
+            def calc_smma(src, length):
+                smma = []
+                for i in range(len(src)):
+                    if i == 0:
+                        smma.append(src[i])
+                    else:
+                        smma.append(((length - 1) * smma[-1] + src[i]) / length)
+                return smma
+
+            def calc_zlema(src, length):
+                ema1 = []
+                ema2 = []
+                d = []
+                for i in range(len(src)):
+                    if i == 0:
+                        ema1.append(src[i])
+                    else:
+                        ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
+                for i in range(len(ema1)):
+                    if i == 0:
+                        ema2.append(ema1[i])
+                    else:
+                        ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
+                for i in range(len(ema1)):
+                    d.append(ema1[i] - ema2[i])
+                return [ema1, ema2, d]
+
+            # Calculate Impulse MACD
+            src = (df['High'] + df['Low'] + df['Close']) / 3
+            hi = calc_smma(df['High'], length_ma)
+            lo = calc_smma(df['Low'], length_ma)
+            mi = calc_zlema(src, length_ma)[0]
+            md = []
+            mdc = []
+            for i in range(len(mi)):
+                if mi[i] > hi[i]:
+                    md.append(mi[i] - hi[i])
+                    mdc.append('lime')
+                elif mi[i] < lo[i]:
+                    md.append(mi[i] - lo[i])
+                    mdc.append('red')
+                else:
+                    md.append(0)
+                    mdc.append('orange')
+            sb = calc_smma(md, length_signal)
+            sh = [md[i] - sb[i] for i in range(len(md))]
+
+            # Create Plotly figure
+            fig.add_trace(
+                go.Scatter(
+                    x=df.index,
+                    y=[0] * len(data),
+                    name="MidLine",
+                    mode="lines",
+                    line=dict(color="gray")
+                ), row = 2, col=1
+            )
+
+            fig.add_trace(
+                go.Bar(
+                    x=df.index,
+                    y=md,
+                    name="ImpulseMACD",
+                    marker=dict(color=mdc)
+                ),row = 2, col=1
+            )
+
+            fig.add_trace(
+                go.Bar(
+                    x=df.index,
+                    y=sh,
+                    name="ImpulseHisto",
+                    marker=dict(color="blue")
+                ),row = 2, col=1
+            )
+
+            fig.add_trace(
+                go.Scatter(
+                    x=df.index,
+                    y=sb,
+                    name="ImpulseMACDCDSignal",
+                    mode="lines",
+                    line=dict(color="maroon")
+                ),row = 2, col=1
+            )
         elif indicator == "Ichimoku Cloud":
             
             # Plotting Ichimoku
@@ -262,9 +353,9 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
+indicators = ["Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
 
-default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 

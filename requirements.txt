@@ -6,3 +6,4 @@ plotly==5.7.0
 streamlit==1.16
 yfinance==0.1.63
 datetime
+business_calendar

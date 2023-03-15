@@ -49,7 +49,6 @@ def get_fill_color(label):
 
 def create_plot(df, indicators):
     fig = make_subplots(rows=5, cols=1, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing = 0.05, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2",  "Lower Indicator 3", "Lower Indicator 4"))
-    
     if i == '1d'
         fig.update_xaxes(
                 rangeslider_visible=False,
@@ -79,9 +78,7 @@ def create_plot(df, indicators):
                     dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
                     ]
-                        )
-
-    
+                        ) 
     fig.append_trace(go.Candlestick(
             x=df.index,
             open=df['Open'],

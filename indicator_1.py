@@ -335,28 +335,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index, y=df['Middle Band'], 
                             mode='lines', name='Middle Band', line=dict(color='black', width=2)))
         elif indicator == 'Average True Range (ATR)':
-            n = 14
-            # calculate the Average True Range (ATR)
-            df['tr1'] = abs(df['High'] - df['Low'])
-            df['tr2'] = abs(df['High'] - df['Close'].shift())
-            df['tr3'] = abs(df['Low'] - df['Close'].shift())
-            df['tr'] = df[['tr1', 'tr2', 'tr3']].max(axis=1)
-            df['atr'] = df['tr'].rolling(n).mean()
-            df['20atr'] = df['atr'].rolling(window=20).mean()
-            fig.add_trace(go.Scatter(x=df.index, y=df['atr'], name='ATR', line=dict(color='purple', width=2)), row = 4, col = 1)
-            fig.add_trace(go.Scatter(x=df.index, y=df['20atr'], name='Mean ATR', line=dict(color='orange', width=2)), row = 4, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ATRr_14'], line_color = 'red', name = 'ATR'), row = 4, col =1)
         elif indicator == 'Average Directional Index (ADX)':
-            n = 14
-            # calculate the Average Directional Index (ADX)
-            df['up_move'] = df['High'] - df['High'].shift()
-            df['down_move'] = df['Low'].shift() - df['Low']
-            df['plus_dm'] = np.where((df['up_move'] > df['down_move']) & (df['up_move'] > 0), df['up_move'], 0)
-            df['minus_dm'] = np.where((df['down_move'] > df['up_move']) & (df['down_move'] > 0), df['down_move'], 0)
-            df['plus_di'] = 100 * (df['plus_dm'] / df['atr']).ewm(span=n, adjust=False).mean()
-            df['minus_di'] = 100 * (df['minus_dm'] / df['atr']).ewm(span=n, adjust=False).mean()
-            df['dx'] = 100 * (abs(df['plus_di'] - df['minus_di']) / (df['plus_di'] + df['minus_di'])).ewm(span=n, adjust=False).mean()
-            df['adx'] = df['dx'].ewm(span=n, adjust=False).mean()
-            fig.add_trace(go.Scatter(x=df.index, y=df['adx'], name='ADX', line=dict(color='blue', width=2)), row = 5, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ADX_14'], line_color = 'orange', name = 'ADX'), row = 5, col=1)
         elif indicator == "MACD 2":
             def impulsive_macd(prices, short_period, long_period, signal_period):
                 prices = df['Close']

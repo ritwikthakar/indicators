@@ -66,14 +66,7 @@ def create_plot(df, indicators):
             mean_volume = df['Volume'].mean()
             support_level = df[df['Volume'] < mean_volume]['Close'].max()
             resistance_level = df[df['Volume'] >= mean_volume]['Close'].min()
-            x = np.arange(len(df))
-            y = df['Close']
-            p = np.polyfit(x, y, 1)
-            slope = p[0]
-            intercept = p[1]
-            upper_line = slope * x + intercept + (np.std(y) * 2)
-            lower_line = slope * x + intercept - (np.std(y) * 2)
-            fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
+                        fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
                           y=[support_level, support_level],
                           name='Support',
                           line=dict(color='green', width=1, dash='dash')))
@@ -81,10 +74,20 @@ def create_plot(df, indicators):
                                          y=[resistance_level, resistance_level],
                                          name='Resistance',
                                          line=dict(color='red', width=1, dash='dash')))
+        elif indicator == "Regression Channels":
+            x = np.arange(len(df))
+            y = df['Close']
+            p = np.polyfit(x, y, 1)
+            slope = p[0]
+            intercept = p[1]
+            upper_line = slope * x + intercept + (np.std(y) * 2)
+            lower_line = slope * x + intercept - (np.std(y) * 2)
             fig.add_trace(go.Scatter(x=df.index, y=upper_line, mode='lines', name='Upper Regression Channel',
                          line=dict(color='red', width=2, dash='dash')))
             fig.add_trace(go.Scatter(x=df.index, y=lower_line, mode='lines', name='Lower Regression Channel',
                                      line=dict(color='green', width=2, dash='dash')))
+            fig.add_trace(go.Scatter(x=df.index, y=regression_line, mode='lines', name='Regression Line',
+                         line=dict(color='blue', width=2)))
         elif indicator == "Bollinger Bands":
             fig.add_trace(go.Scatter(x = df.index, y=df['BBU_20_2.0'], line_color = 'black', name = 'Bollinger Upper Band'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBM_20_2.0'], line_color = 'black', name = '20 SMA'), row =1, col = 1)
@@ -261,9 +264,9 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Volume Based Support & Resistance", "Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
+indicators = ["Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
 
-default_options = ["Volume Based Support & Resistance","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 

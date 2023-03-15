@@ -137,19 +137,75 @@ def create_plot(df, indicators):
         elif indicator == "Eleher's Sine Wave":
             fig.add_trace(go.Scatter(x = df.index, y=df['EBSW_40_10'], line_color = 'blue', name='Sine Wave'), row =5, col = 1)
         elif indicator == "Impulse MACD":
-            def impulsive_macd(prices, short_period, long_period, signal_period):
-                prices = df['Close']
-                ema_short = prices.ewm(span=short_period, min_periods=short_period).mean()
-                ema_long = prices.ewm(span=long_period, min_periods=long_period).mean()
-                macd = ema_short - ema_long
-                signal_line = macd.ewm(span=signal_period, min_periods=signal_period).mean()
-                histogram = macd - signal_line
-                return pd.concat([macd, signal_line, histogram], axis=1, keys=['MACD', 'Signal', 'Histogram'])
-            prices = df['Close']
-            imp_macd = impulsive_macd(prices, short_period=12, long_period=26, signal_period=9)
-            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['MACD'], mode='lines', name='Impulsive MACD', line_color='blue'),row = 2, col=1)
-            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'orange',name='Imp MACD Signal Line'),row = 2, col=1)
-            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
+            # Define Impulse MACD calculation functions
+            def calc_smma(src, len):
+                smma = pd.Series(0.0, index=src.index)
+                for i in range(len, len(src)):
+                    smma[i] = src[i - len:i].mean()
+                return smma
+
+            def calc_zlema(src, length):
+                ema1 = src.ewm(span=length, adjust=False).mean()
+                ema2 = ema1.ewm(span=length, adjust=False).mean()
+                d = ema1 - ema2
+                return ema1 + d
+
+            # Define Impulse MACD calculation and bar color functions
+            def calc_impulse_macd(df, lengthMA, lengthSignal):
+                hi = calc_smma(df['High'], lengthMA)
+                lo = calc_smma(df['Low'], lengthMA)
+                mi = calc_zlema(df['Close'], lengthMA)
+                md = pd.Series(0.0, index=df.index)
+                for i in range(len(md)):
+                    if mi[i] > hi[i]:
+                        md[i] = mi[i] - hi[i]
+                    elif mi[i] < lo[i]:
+                        md[i] = mi[i] - lo[i]
+                sb = md.rolling(window=lengthSignal).mean()
+                sh = md - sb
+                return md, sh
+
+            def get_bar_colors(md, sh):
+                up_color = 'lime'
+                down_color = 'red'
+                flat_color = 'orange'
+                bar_colors = []
+                for i in range(len(md)):
+                    if md[i] > sh[i]:
+                        bar_colors.append(up_color)
+                    elif md[i] < sh[i]:
+                        bar_colors.append(down_color)
+                    else:
+                        bar_colors.append(flat_color)
+                return bar_colors
+            # Calculate Impulse MACD and bar colors
+            md, sh = calc_impulse_macd(data, lengthMA=34, lengthSignal=9)
+            bar_colors = get_bar_colors(md, sh)
+            fig.add_trace(go.Scatter(x=data.index, y=md, name='Impulse MACD', 
+                         marker={'color': bar_colors},
+                         mode='lines', line={'width': 2}),row = 2, col=1)
+
+            fig.add_trace(go.Bar(x=data.index, y=sh, name='Impulse Histo', 
+                                 marker={'color': 'blue'}),row = 2, col=1)
+
+            fig.add_trace(go.Scatter(x=data.index, y=md.rolling(window=9).mean(), 
+                                     name='Impulse MACD CD Signal', 
+                                     marker={'color': 'maroon'},
+                                     mode='lines', line={'width': 2}),row = 2, col=1)
+
+#             def impulsive_macd(prices, short_period, long_period, signal_period):
+#                 prices = df['Close']
+#                 ema_short = prices.ewm(span=short_period, min_periods=short_period).mean()
+#                 ema_long = prices.ewm(span=long_period, min_periods=long_period).mean()
+#                 macd = ema_short - ema_long
+#                 signal_line = macd.ewm(span=signal_period, min_periods=signal_period).mean()
+#                 histogram = macd - signal_line
+#                 return pd.concat([macd, signal_line, histogram], axis=1, keys=['MACD', 'Signal', 'Histogram'])
+#             prices = df['Close']
+#             imp_macd = impulsive_macd(prices, short_period=12, long_period=26, signal_period=9)
+#             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['MACD'], mode='lines', name='Impulsive MACD', line_color='blue'),row = 2, col=1)
+#             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'orange',name='Imp MACD Signal Line'),row = 2, col=1)
+#             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
         elif indicator == "Ichimoku Cloud":
             
             # Plotting Ichimoku

@@ -151,7 +151,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'], marker_color='blue', showlegend = False, name='MACD impulse'),row = 2, col=1)
             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'orange',name='Imp MACD Signal Line'),row = 2, col=1)
 #             col = ['green' if val > 0 else 'red' for val in df['Histogram']]
-            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color='red', name='Imp MACD Histogram'),row = 2, col=1)
+            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
         elif indicator == "Ichimoku Cloud":
             
             # Plotting Ichimoku

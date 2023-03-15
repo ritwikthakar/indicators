@@ -179,16 +179,16 @@ def create_plot(df, indicators):
                         bar_colors.append(flat_color)
                 return bar_colors
             # Calculate Impulse MACD and bar colors
-            md, sh = calc_impulse_macd(data, lengthMA=34, lengthSignal=9)
+            md, sh = calc_impulse_macd(df, lengthMA=34, lengthSignal=9)
             bar_colors = get_bar_colors(md, sh)
-            fig.add_trace(go.Scatter(x=data.index, y=md, name='Impulse MACD', 
+            fig.add_trace(go.Scatter(x=df.index, y=md, name='Impulse MACD', 
                          marker={'color': bar_colors},
                          mode='lines', line={'width': 2}),row = 2, col=1)
 
-            fig.add_trace(go.Bar(x=data.index, y=sh, name='Impulse Histo', 
+            fig.add_trace(go.Bar(x=df.index, y=sh, name='Impulse Histo', 
                                  marker={'color': 'blue'}),row = 2, col=1)
 
-            fig.add_trace(go.Scatter(x=data.index, y=md.rolling(window=9).mean(), 
+            fig.add_trace(go.Scatter(x=df.index, y=md.rolling(window=9).mean(), 
                                      name='Impulse MACD CD Signal', 
                                      marker={'color': 'maroon'},
                                      mode='lines', line={'width': 2}),row = 2, col=1)

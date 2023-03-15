@@ -630,7 +630,7 @@ def create_plot(df, indicators):
     if i == '1h':
         fig.update_xaxes(
         rangeslider_visible=False,
-        dtick='M1' # set the interval to 1 minute
+        dtick='dtick=60*60*1000' # set the interval to 1 minute
     )
     else:
         fig.update_xaxes(

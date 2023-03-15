@@ -240,7 +240,7 @@ def create_plot(df, indicators):
 
 indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
 
-default_options = ["Bollinger Bands","SMA Ribbons","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Bollinger Bands","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 

@@ -16,7 +16,7 @@ ticker = st.sidebar.text_input('Enter Ticker', 'SPY')
 # t = st.sidebar.selectbox('Select Number of Days', ('1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max'))
 # i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1m','2m','5m','15m','30m','60m','90m','1h','1d','5d','1wk','1mo','3mo'))
 t = st.sidebar.selectbox('Select Number of Days', (180, 3000, 1000, 735, 450, 400, 350, 252, 150, 90, 60, 45, 30, 15))
-i = st.sidebar.selectbox('Select Time Granularity', '1d')
+i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1wk', '1h', '15m'))
 st.header(f'{ticker.upper()} Technical Indicators')
 
 start = dt.datetime.today()-dt.timedelta(t)
@@ -319,43 +319,43 @@ def create_plot(df, indicators):
         font_size=20,
         height=1000, width=1200,)
         
-#         if i == '1h':    
-#             fig.update_xaxes(
-#                     rangeslider_visible=False,
-#                     rangebreaks=[
-#                         # NOTE: Below values are bound (not single values), ie. hide x to y
+        if i == '1h':    
+            fig.update_xaxes(
+                    rangeslider_visible=False,
+                    rangebreaks=[
+                        # NOTE: Below values are bound (not single values), ie. hide x to y
 #                         dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                         # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#                             # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#                         ]
-#                             )
-#         elif i == '1wk':    
-#             fig.update_xaxes(
-#                     rangeslider_visible=False,
-#                     rangebreaks=[
-#                         # NOTE: Below values are bound (not single values), ie. hide x to y
-#                         dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                         # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#                             # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#                         ]
-#                             )
+                        dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                            # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                        ]
+                            )
+        elif i == '1wk':    
+            fig.update_xaxes(
+                    rangeslider_visible=False,
+                    rangebreaks=[
+                        # NOTE: Below values are bound (not single values), ie. hide x to y
+                        dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                        # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                            # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                        ]
+                            )
 
-#         else:
-#             fig.update_xaxes(
-#                     rangeslider_visible=False,
-#                     rangebreaks=[
-#                         # NOTE: Below values are bound (not single values), ie. hide x to y
-#                         dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                         # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#                             # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#                         ]
-#                             )        
-    fig.update_xaxes(
-    rangebreaks=[
-        dict(bounds=["sat", "mon"]), #hide weekends
-        dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
-    ]
-)  
+        else:
+            fig.update_xaxes(
+                    rangeslider_visible=False,
+                    rangebreaks=[
+                        # NOTE: Below values are bound (not single values), ie. hide x to y
+                        dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                        # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                            # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                        ]
+                            )        
+#     fig.update_xaxes(
+#     rangebreaks=[
+#         dict(bounds=["sat", "mon"]), #hide weekends
+#         dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
+#     ]
+# )  
     # Update options and show plot
     fig.update_layout(layout)
     st.plotly_chart(fig)

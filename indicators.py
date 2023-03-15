@@ -350,7 +350,6 @@ def create_plot(df, indicators):
 #                         )
     fig.update_xaxes(
     rangebreaks=[
-        dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
         dict(bounds=["sat", "mon"]), #hide weekends
         dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
     ]

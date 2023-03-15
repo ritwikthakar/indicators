@@ -629,8 +629,13 @@ def create_plot(df, indicators):
 
     if i == '1h':
         fig.update_xaxes(
-        rangeslider_visible=False,
-        dtick='dtick=60*60*1000' # set the interval to 1 minute
+        rangeslider_visible=True,
+        rangebreaks=[
+            # NOTE: Below values are bound (not single values), ie. hide x to y
+            dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+            dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+            # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+        ]
     )
     else:
         fig.update_xaxes(

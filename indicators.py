@@ -40,56 +40,56 @@ df.ta.sma(length=200, append=True)
 df.ta.bbands(close=df['Adj Close'], length=20, std=2, append=True)
 
 # Define input variables
-            length_ma = 34
-            length_signal = 9
+length_ma = 34
+length_signal = 9
 
-            # Define functions
-            def calc_smma(src, length):
-                smma = []
-                for i in range(len(src)):
-                    if i == 0:
-                        smma.append(src[i])
-                    else:
-                        smma.append(((length - 1) * smma[-1] + src[i]) / length)
-                return smma
+# Define functions
+def calc_smma(src, length):
+    smma = []
+    for i in range(len(src)):
+        if i == 0:
+            smma.append(src[i])
+        else:
+            smma.append(((length - 1) * smma[-1] + src[i]) / length)
+    return smma
 
-            def calc_zlema(src, length):
-                ema1 = []
-                ema2 = []
-                d = []
-                for i in range(len(src)):
-                    if i == 0:
-                        ema1.append(src[i])
-                    else:
-                        ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
-                for i in range(len(ema1)):
-                    if i == 0:
-                        ema2.append(ema1[i])
-                    else:
-                        ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
-                for i in range(len(ema1)):
-                    d.append(ema1[i] - ema2[i])
-                return [ema1, ema2, d]
+def calc_zlema(src, length):
+    ema1 = []
+    ema2 = []
+    d = []
+    for i in range(len(src)):
+        if i == 0:
+            ema1.append(src[i])
+        else:
+            ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
+    for i in range(len(ema1)):
+        if i == 0:
+            ema2.append(ema1[i])
+        else:
+            ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
+    for i in range(len(ema1)):
+        d.append(ema1[i] - ema2[i])
+    return [ema1, ema2, d]
 
-            # Calculate Impulse MACD
-            src = (df['High'] + df['Low'] + df['Close']) / 3
-            hi = calc_smma(df['High'], length_ma)
-            lo = calc_smma(df['Low'], length_ma)
-            mi = calc_zlema(src, length_ma)[0]
-            md = []
-            mdc = []
-            for i in range(len(mi)):
-                if mi[i] > hi[i]:
-                    md.append(mi[i] - hi[i])
-                    mdc.append('lime')
-                elif mi[i] < lo[i]:
-                    md.append(mi[i] - lo[i])
-                    mdc.append('red')
-                else:
-                    md.append(0)
-                    mdc.append('orange')
-            sb = calc_smma(md, length_signal)
-            sh = [md[i] - sb[i] for i in range(len(md))]
+# Calculate Impulse MACD
+src = (df['High'] + df['Low'] + df['Close']) / 3
+hi = calc_smma(df['High'], length_ma)
+lo = calc_smma(df['Low'], length_ma)
+mi = calc_zlema(src, length_ma)[0]
+md = []
+mdc = []
+for i in range(len(mi)):
+    if mi[i] > hi[i]:
+        md.append(mi[i] - hi[i])
+        mdc.append('lime')
+    elif mi[i] < lo[i]:
+        md.append(mi[i] - lo[i])
+        mdc.append('red')
+    else:
+        md.append(0)
+        mdc.append('orange')
+sb = calc_smma(md, length_signal)
+sh = [md[i] - sb[i] for i in range(len(md))]
             
 df.ta.ichimoku()
 

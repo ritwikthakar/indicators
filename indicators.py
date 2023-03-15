@@ -66,6 +66,13 @@ def create_plot(df, indicators):
             mean_volume = df['Volume'].mean()
             support_level = df[df['Volume'] < mean_volume]['Close'].max()
             resistance_level = df[df['Volume'] >= mean_volume]['Close'].min()
+            x = np.arange(len(df))
+            y = df['Close']
+            p = np.polyfit(x, y, 1)
+            slope = p[0]
+            intercept = p[1]
+            upper_line = slope * x + intercept + (np.std(y) * 2)
+            lower_line = slope * x + intercept - (np.std(y) * 2)
             fig.add_trace(go.Scatter(x=[df.index[0], df.index[-1]],
                           y=[support_level, support_level],
                           name='Support',
@@ -74,6 +81,10 @@ def create_plot(df, indicators):
                                          y=[resistance_level, resistance_level],
                                          name='Resistance',
                                          line=dict(color='red', width=1, dash='dash')))
+            fig.add_trace(go.Scatter(x=df.index, y=upper_line, mode='lines', name='Upper Regression Channel',
+                         line=dict(color='red', width=2, dash='dash')))
+            fig.add_trace(go.Scatter(x=df.index, y=lower_line, mode='lines', name='Lower Regression Channel',
+                                     line=dict(color='green', width=2, dash='dash')))
         elif indicator == "Bollinger Bands":
             fig.add_trace(go.Scatter(x = df.index, y=df['BBU_20_2.0'], line_color = 'black', name = 'Bollinger Upper Band'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['BBM_20_2.0'], line_color = 'black', name = '20 SMA'), row =1, col = 1)

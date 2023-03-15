@@ -627,8 +627,7 @@ def create_plot(df, indicators):
         font_size=20,
         height=1000, width=1200)
     
-    i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1h','15m'))
-
+    
     if i == '1d':
         fig.update_xaxes(
         rangeslider_visible=True,

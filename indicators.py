@@ -149,7 +149,7 @@ def create_plot(df, indicators):
             imp_macd = impulsive_macd(prices, short_period=12, long_period=26, signal_period=9)
             line_colors = ['skyblue' if imp_macd.loc[date, 'MACD'] > imp_macd.loc[date, 'Signal'] else 'orange' for date in imp_macd.index]
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'], name='Impulsive MACD', marker_color=line_colors),row = 2, col=1)
-            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'orange',name='Imp MACD Signal Line'),row = 2, col=1)
+            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'purple',name='Imp MACD Signal Line'),row = 2, col=1)
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
         elif indicator == "Ichimoku Cloud":
             
@@ -240,7 +240,7 @@ def create_plot(df, indicators):
 
 indicators = ["Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "Impulse MACD", "Ichimoku Cloud"]
 
-default_options = ["Bollinger Bands","SMA Ribbons","Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Bollinger Bands","SMA Ribbons","Parabolic Stop & Reverse (PSAR)", "Impulse MACD", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 

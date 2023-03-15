@@ -9,7 +9,7 @@ from pandas_datareader import data as pdr
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import pandas_ta as ta
-import business_calendar as bc, MO, TU, WE, TH, FR
+import business_calendar as bc
 
 df = pd.DataFrame()
 

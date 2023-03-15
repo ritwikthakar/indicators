@@ -146,8 +146,9 @@ def create_plot(df, indicators):
                 histogram = macd - signal_line
                 return pd.concat([macd, signal_line, histogram], axis=1, keys=['MACD', 'Signal', 'Histogram'])
             prices = df['Close']
-            imp_macd = impulsive_macd(prices, short_period=5, long_period=10, signal_period=5)
-            fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['MACD'], mode='lines', name='Impulsive MACD', line_color='blue'),row = 2, col=1)
+            imp_macd = impulsive_macd(prices, short_period=12, long_period=26, signal_period=9)
+            line_colors = ['skyblue' if imp_macd.loc[date, 'MACD'] > imp_macd.loc[date, 'Signal'] else 'orange' for date in imp_macd.index]
+            fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'], mode='lines', name='Impulsive MACD', marker_color=line_colors),row = 2, col=1)
             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'orange',name='Imp MACD Signal Line'),row = 2, col=1)
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['Histogram'], marker_color=['green' if x > 0 else 'red' for x in imp_macd['Histogram']], name='Imp MACD Histogram'),row = 2, col=1)
         elif indicator == "Ichimoku Cloud":

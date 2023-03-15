@@ -329,7 +329,7 @@ def create_plot(df, indicators):
                             # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
                         ]
                             )
-                else:
+        else:
             fig.update_xaxes(
                     rangeslider_visible=False,
                     rangebreaks=[

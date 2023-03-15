@@ -354,6 +354,13 @@ def create_plot(df, indicators):
         dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
     ]
 )
+    
+    fig.update_xaxes(
+    rangebreaks=[
+        dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+        dict(values=["2015-12-25", "2016-01-01"])  # hide Christmas and New Year's
+    ]
+)
    
     # Update options and show plot
     fig.update_layout(layout)

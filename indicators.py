@@ -137,7 +137,7 @@ def create_plot(df, indicators):
         elif indicator == "Eleher's Sine Wave":
             fig.add_trace(go.Scatter(x = df.index, y=df['EBSW_40_10'], line_color = 'blue', name='Sine Wave'), row =5, col = 1)
         elif indicator == "Impulse MACD":
-            def impulsive_macd(df["Close"], short_period, long_period, signal_period):
+            def impulsive_macd(prices, short_period, long_period, signal_period):
                 prices = df['Close']
                 ema_short = prices.ewm(span=short_period, min_periods=short_period).mean()
                 ema_long = prices.ewm(span=long_period, min_periods=long_period).mean()
@@ -145,7 +145,8 @@ def create_plot(df, indicators):
                 signal_line = macd.ewm(span=signal_period, min_periods=signal_period).mean()
                 histogram = macd - signal_line
                 return pd.concat([macd, signal_line, histogram], axis=1, keys=['MACD', 'Signal', 'Histogram'])
-            imp_macd = impulsive_macd(df["Close"], short_period=12, long_period=26, signal_period=9)
+            prices = df['Close']
+            imp_macd = impulsive_macd(prices, short_period=12, long_period=26, signal_period=9)
             colors = ['blue' if val > 0 else 'orange' for val in df['MACD']]
             fig.add_trace(go.Bar(x=imp_macd.index, y=imp_macd['MACD'],marker_color=colors, showlegend = False, name='MACD impulse'),row = 2, col=1)
             fig.add_trace(go.Scatter(x=imp_macd.index, y=imp_macd['Signal'], line_color = 'purple',name='Imp MACD Signal Line'),row = 2, col=1)

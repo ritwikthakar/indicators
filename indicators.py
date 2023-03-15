@@ -308,14 +308,14 @@ def create_plot(df, indicators):
                                           line = dict(color='rgba(0,0,0,0)'), 
                                           fill='tonexty', 
                                           fillcolor = get_fill_color(df['label'].iloc[0])))
-    # Make it pretty
+     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
         # Font Families
         font_family='Monospace',
         font_color='#000000',
         font_size=20,
-        height=1000, width=1200
+        height=1000, width=1200,
     )
     
     if i == '1d':
@@ -348,7 +348,7 @@ def create_plot(df, indicators):
                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
                     ]
                         )
-        
+   
     # Update options and show plot
     fig.update_layout(layout)
     st.plotly_chart(fig)

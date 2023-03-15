@@ -636,7 +636,7 @@ def create_plot(df, indicators):
                     ]
                         )
     
-    else:
+    elif:
         fig.update_xaxes(
                 rangeslider_visible=False,
                 rangebreaks=[

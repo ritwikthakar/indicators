@@ -22,7 +22,6 @@ st.header(f'{ticker.upper()} Technical Indicators')
 start = dt.datetime.today()-dt.timedelta(t)
 end = dt.datetime.today()
 df = yf.download(ticker, start, end, interval= i)
-df = df[df.index.dayofweek >= 5]
 
 df.ta.strategy("All")
 

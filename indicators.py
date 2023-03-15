@@ -315,7 +315,7 @@ def create_plot(df, indicators):
         font_family='Monospace',
         font_color='#000000',
         font_size=20,
-        height=1000, width=1200,
+        height=1000, width=1200
     )
     
     if i == '1d':

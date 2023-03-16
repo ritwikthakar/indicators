@@ -42,56 +42,56 @@ df.ta.sma(length=200, append=True)
 
 # Impulse MACD
 # Define input variables
-length_ma = 34
-length_signal = 9
+# length_ma = 34
+# length_signal = 9
 
-# Define functions
-def calc_smma(src, length):
-    smma = []
-    for i in range(len(src)):
-        if i == 0:
-            smma.append(src[i])
-        else:
-            smma.append(((length - 1) * smma[-1] + src[i]) / length)
-    return smma
+# # Define functions
+# def calc_smma(src, length):
+#     smma = []
+#     for i in range(len(src)):
+#         if i == 0:
+#             smma.append(src[i])
+#         else:
+#             smma.append(((length - 1) * smma[-1] + src[i]) / length)
+#     return smma
 
-def calc_zlema(src, length):
-    ema1 = []
-    ema2 = []
-    d = []
-    for i in range(len(src)):
-        if i == 0:
-            ema1.append(src[i])
-        else:
-            ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
-    for i in range(len(ema1)):
-        if i == 0:
-            ema2.append(ema1[i])
-        else:
-            ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
-    for i in range(len(ema1)):
-        d.append(ema1[i] - ema2[i])
-    return [ema1, ema2, d]
+# def calc_zlema(src, length):
+#     ema1 = []
+#     ema2 = []
+#     d = []
+#     for i in range(len(src)):
+#         if i == 0:
+#             ema1.append(src[i])
+#         else:
+#             ema1.append((2 * src[i] + (length - 1) * ema1[-1]) / (length + 1))
+#     for i in range(len(ema1)):
+#         if i == 0:
+#             ema2.append(ema1[i])
+#         else:
+#             ema2.append((2 * ema1[i] + (length - 1) * ema2[-1]) / (length + 1))
+#     for i in range(len(ema1)):
+#         d.append(ema1[i] - ema2[i])
+#     return [ema1, ema2, d]
 
-# Calculate Impulse MACD
-src = (df['High'] + df['Low'] + df['Close']) / 3
-hi = calc_smma(df['High'], length_ma)
-lo = calc_smma(df['Low'], length_ma)
-mi = calc_zlema(src, length_ma)[0]
-md = []
-mdc = []
-for i in range(len(mi)):
-    if mi[i] > hi[i]:
-        md.append(mi[i] - hi[i])
-        mdc.append('lime')
-    elif mi[i] < lo[i]:
-        md.append(mi[i] - lo[i])
-        mdc.append('red')
-    else:
-        md.append(0)
-        mdc.append('orange')
-sb = calc_smma(md, length_signal)
-sh = [md[i] - sb[i] for i in range(len(md))]
+# # Calculate Impulse MACD
+# src = (df['High'] + df['Low'] + df['Close']) / 3
+# hi = calc_smma(df['High'], length_ma)
+# lo = calc_smma(df['Low'], length_ma)
+# mi = calc_zlema(src, length_ma)[0]
+# md = []
+# mdc = []
+# for i in range(len(mi)):
+#     if mi[i] > hi[i]:
+#         md.append(mi[i] - hi[i])
+#         mdc.append('lime')
+#     elif mi[i] < lo[i]:
+#         md.append(mi[i] - lo[i])
+#         mdc.append('red')
+#     else:
+#         md.append(0)
+#         mdc.append('orange')
+# sb = calc_smma(md, length_signal)
+# sh = [md[i] - sb[i] for i in range(len(md))]
 
 
 
@@ -608,12 +608,12 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['BOP'], line_color = 'Brown', name = 'BOP'), row = 3, col=1)
         elif indicator == "On Balance Volume (OBV)":
             fig.add_trace(go.Scatter(x = df.index, y=df['OBV'], line_color = 'purple', name = 'OBV'), row = 3, col=1)
-        elif indicator == "Impulse MACD":    
-            # Create Plotly figure
-            fig.add_trace(go.Scatter(x=df.index,y=[0] * len(df),name="MidLine",mode="lines",line=dict(color="gray")), row = 2, col=1)
-            fig.add_trace(go.Bar(x=df.index,y=md,name="ImpulseMACD",marker=dict(color=mdc)),row = 2, col=1)
-            fig.add_trace(go.Bar(x=df.index,y=sh,name="ImpulseHisto",marker=dict(color="blue")),row = 2, col=1)
-            fig.add_trace(go.Scatter(x=df.index,y=sb,name="ImpulseMACDCDSignal",mode="lines",line=dict(color="maroon")),row = 2, col=1)
+#         elif indicator == "Impulse MACD":    
+#             # Create Plotly figure
+#             fig.add_trace(go.Scatter(x=df.index,y=[0] * len(df),name="MidLine",mode="lines",line=dict(color="gray")), row = 2, col=1)
+#             fig.add_trace(go.Bar(x=df.index,y=md,name="ImpulseMACD",marker=dict(color=mdc)),row = 2, col=1)
+#             fig.add_trace(go.Bar(x=df.index,y=sh,name="ImpulseHisto",marker=dict(color="blue")),row = 2, col=1)
+#             fig.add_trace(go.Scatter(x=df.index,y=sb,name="ImpulseMACDCDSignal",mode="lines",line=dict(color="maroon")),row = 2, col=1)
         elif indicator == "Chopiness Index":    
             fig.add_trace(go.Scatter(x = df.index, y=df['CHOP_14_1_100'], line_color = 'blue', name = 'Choppiness Index'), row = 4, col =1)
     

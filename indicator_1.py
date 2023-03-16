@@ -19,7 +19,7 @@ ticker = st.sidebar.text_input('Enter Ticker', 'SPY')
 # t = st.sidebar.selectbox('Select Number of Days', ('1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max'))
 # i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1m','2m','5m','15m','30m','60m','90m','1h','1d','5d','1wk','1mo','3mo'))
 t = st.sidebar.selectbox('Select Number of Days', (180, 3000, 1000, 735, 400, 350, 252, 150, 90, 60, 45, 30, 15))
-i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1wk', '1h', '15m'))
+i = st.sidebar.selectbox('Select Time Granularity', ('1d', '1wk', '1h','15m'))
 st.header(f'{ticker.upper()} Technical Analysis')
 
 start = dt.datetime.today()-dt.timedelta(t)
@@ -215,8 +215,8 @@ def create_plot(df, indicators):
             rs = avg_gain / avg_loss
             rsi = 100 - (100 / (1 + rs))
             df['20RSI'] = rsi.rolling(window=20).mean()
-            fig.add_trace(go.Scatter(x=df.index, y=rsi, name='RSI', line=dict(color='green', width=2)), row=3, col=1)
-            fig.add_trace(go.Scatter(x=df.index, y=df['20RSI'], name='Mean RSI', line=dict(color='Orange', width=2)), row = 3, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=rsi, name='RSI', line=dict(color='green', width=2)), row=2, col=1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['20RSI'], name='Mean RSI', line=dict(color='Orange', width=2)), row = 2, col = 1)
         elif indicator == 'MACD':
             # Calculate the MACD
             df['12EMA'] = df['Close'].ewm(span=12).mean()
@@ -616,8 +616,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index,y=sb,name="ImpulseMACDCDSignal",mode="lines",line=dict(color="maroon")),row = 2, col=1)
         elif indicator == "Chopiness Index":    
             fig.add_trace(go.Scatter(x = df.index, y=df['CHOP_14_1_100'], line_color = 'blue', name = 'Choppiness Index'), row = 4, col =1)
-    
-   
+                
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -626,45 +625,48 @@ def create_plot(df, indicators):
         font_color='#000000',
         font_size=20,
         height=1000, width=1200)
+
+    if i == '1d':
+        fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                    # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
+    elif i == '1wk':
+        fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                    # dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
+    else:
+        fig.update_xaxes(
+                rangeslider_visible=False,
+                rangebreaks=[
+                    # NOTE: Below values are bound (not single values), ie. hide x to y
+                    dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
+                    dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                        # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
+                    ]
+                        )
     
-    fig.update_xaxes(
-        rangeslider_visible=False,
-        rangebreaks=[
-            # NOTE: Below values are bound (not single values), ie. hide x to y
-            dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-            # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-        ]
-    )
-    
-#     if i == '1d':
-#         fig.update_xaxes(
-#         rangeslider_visible=False,
-#         rangebreaks=[
-#             # NOTE: Below values are bound (not single values), ie. hide x to y
-#             dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#             # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#         ]
-#     )
-#     else:
-#         fig.update_xaxes(
-#         rangeslider_visible=False,
-#         rangebreaks=[
-#             # NOTE: Below values are bound (not single values), ie. hide x to y
-#             dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#             dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
-#             # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
-#         ]
-#     )    
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
 
 indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD" ]
 
-# default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 
-selected_indicators = st.multiselect('Select Indicators', indicators)
+selected_indicators = st.multiselect('Select Indicators', indicators, default=default_options)
 
 
 create_plot(df, selected_indicators)

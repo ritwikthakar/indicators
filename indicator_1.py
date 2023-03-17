@@ -652,7 +652,7 @@ def create_plot(df, indicators):
                 rangebreaks=[
                     # NOTE: Below values are bound (not single values), ie. hide x to y
                     dict(bounds=["sat", "mon"]),  # hide weekends, eg. hide sat to before mon
-#                     dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
+                    dict(bounds=[16, 9.5], pattern="hour"),  # hide hours outside of 9.30am-4pm
                         # dict(values=["2019-12-25", "2020-12-24"])  # hide holidays (Christmas and New Year's, etc)
                     ]
                         )
@@ -663,10 +663,10 @@ def create_plot(df, indicators):
 
 indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD" ]
 
-# default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 
-selected_indicators = st.multiselect('Select Indicators', indicators)
+selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
 
 
 create_plot(df, selected_indicators)

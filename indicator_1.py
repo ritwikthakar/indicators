@@ -102,7 +102,7 @@ def create_plot(df, indicators):
         if indicator == 'Candlestick Chart':
             fig.add_trace(go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"), row=1, col=1)
         elif indicator == 'Heikin Ashi Candles':
-            fig.add_trace(go.Candlestick(x=df.index, open=df["HA_open"], high=df["HA_high"], low=df["ha_low"], close=df["ha_close"], name="Price"), row=1, col=1)
+            fig.add_trace(go.Candlestick(x=df.index, open=df["HA_open"], high=df["HA_high"], low=df["HA_low"], close=df["HA_close"], name="Price"), row=1, col=1)
         elif indicator == '20SMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].rolling(window=20).mean(), name='20SMA', line=dict(color='orange', width=2)), row=1, col=1)
         elif indicator == '8EMA':

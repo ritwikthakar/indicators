@@ -177,7 +177,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['MACDs_12_26_9'], line_color = 'deepskyblue', name='sig'), row =2, col = 1)
             colors = ['green' if val > 0 else 'red' for val in df['MACDh_12_26_9']]
             fig.add_trace(go.Bar(x=df.index, y= df['MACDh_12_26_9'],  marker_color=colors, showlegend = False), row = 2, col=1)
-        elf indicator == "QQE MOD":
+        elif indicator == "QQE MOD":
             def qqe(df, period=14, fast_period=5, slow_period=34):
                 df['RSI_smooth'] = df.ta.ema(df['RSI'], timeperiod=fast_period)
                 df['Filter'] = df.ta.ema((df['RSI'] - df['RSI_smooth']) ** 2, timeperiod=slow_period)

@@ -178,21 +178,43 @@ def create_plot(df, indicators):
             colors = ['green' if val > 0 else 'red' for val in df['MACDh_12_26_9']]
             fig.add_trace(go.Bar(x=df.index, y= df['MACDh_12_26_9'],  marker_color=colors, showlegend = False), row = 2, col=1)
         elif indicator == "QQE MOD":
+            def ema(df, period):
+                return df.ewm(span=period, min_periods=0, adjust=True, ignore_na=False).mean()
+            def rsi(df, period):
+                delta = df['Close'].diff()
+                gain = delta.where(delta > 0, 0)
+                loss = -delta.where(delta < 0, 0)
+                avg_gain = gain.rolling(window=period).mean()
+                avg_loss = loss.rolling(window=period).mean()
+                rs = abs(avg_gain / avg_loss)
+                rsi = 100 - (100 / (1 + rs))
+                return rsi
             def qqe(df, period=14, fast_period=5, slow_period=34):
-                df['RSI_smooth'] = df.ta.ema(df['RSI'], timeperiod=fast_period)
-                df['Filter'] = df.ta.ema((df['RSI'] - df['RSI_smooth']) ** 2, timeperiod=slow_period)
+                rsi_period = period
+                rsi_smooth_period = fast_period
+                filter_period = slow_period
+                # Calculate RSI and RSI smooth
+                df['RSI'] = rsi(df, rsi_period)
+                df['RSI_smooth'] = ema(df['RSI'], rsi_smooth_period)
+                # Calculate Filter and Factor
+                df['RSI_diff'] = df['RSI'] - df['RSI_smooth']
+                df['Filter'] = ema(df['RSI_diff'] ** 2, filter_period)
                 df['Factor'] = 0.5 - 0.5 / (1 + df['Filter'] / 100)
-                df['QQE'] = df.ta.ema(df['Close'], timeperiod=fast_period) * df['Factor'] + df.ta.ema(df['Close'], timeperiod=slow_period) * (1 - df['Factor'])
+                # Calculate QQE and QQE_diff
+                df['EMA_fast'] = ema(df['Close'], fast_period)
+                df['EMA_slow'] = ema(df['Close'], slow_period)
+                df['QQE'] = df['EMA_fast'] * df['Factor'] + df['EMA_slow'] * (1 - df['Factor'])
                 df['QQE_diff'] = df['Close'] - df['QQE']
-                df['QQE_hist'] = np.where(df['QQE_diff'] > 0, df['QQE_diff'], 0)
-                return df['QQE'], df['QQE_hist']
+                # Calculate QQE_hist and colors
+                df['QQE_hist'] = df['QQE_diff'].where(df['QQE_diff'] > 0, 0)
+                df['QQE_hist_pos'] = df['QQE_hist'].where(df['QQE_hist'] > 0, 0)
+                df['QQE_hist_neg'] = df['QQE_hist'].where(df['QQE_hist'] < 0, 0)
+                return df['QQE'], df['QQE_hist_pos'], df['QQE_hist_neg']
             # Calculate QQE
-            qqe, qqe_hist = qqe(df)
-            # Create histogram colors
-            qqe_hist_colors = np.where(qqe_hist > 0, 'green', 'red')
-            qqe_hist_colors = np.where(qqe_hist == 0, 'gray', qqe_hist_colors)
+            qqe, qqe_hist_pos, qqe_hist_neg = qqe(df)
             fig.add_trace(go.Scatter(x=df.index, y=qqe, name='QQE'), row =3, col = 1)
-            fig.add_trace(go.Bar(x=df.index, y=qqe_hist, name='QQE Hist', marker_color=qqe_hist_colors), row =3, col = 1)
+            fig.add_trace(go.Bar(x=df.index, y=qqe_hist_pos, name='QQE Hist+', marker_color='green'), row =3, col = 1)
+            fig.add_trace(go.Bar(x=df.index, y=qqe_hist_neg, name='QQE Hist-', marker_color='red'), row =3, col = 1)            
         elif indicator == "RSI":
             fig.add_trace(go.Scatter(x = df.index, y=df['RSI_14'], line_color = 'green', name = 'RSI'), row =3, col = 1)
         elif indicator == "ATR":    

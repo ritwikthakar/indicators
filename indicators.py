@@ -177,6 +177,22 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['MACDs_12_26_9'], line_color = 'deepskyblue', name='sig'), row =2, col = 1)
             colors = ['green' if val > 0 else 'red' for val in df['MACDh_12_26_9']]
             fig.add_trace(go.Bar(x=df.index, y= df['MACDh_12_26_9'],  marker_color=colors, showlegend = False), row = 2, col=1)
+        elf indicator == "QQE MOD":
+            def qqe(df, period=14, fast_period=5, slow_period=34):
+                df['RSI_smooth'] = df.ta.ema(df['RSI'], timeperiod=fast_period)
+                df['Filter'] = df.ta.ema((df['RSI'] - df['RSI_smooth']) ** 2, timeperiod=slow_period)
+                df['Factor'] = 0.5 - 0.5 / (1 + df['Filter'] / 100)
+                df['QQE'] = df.ta.ema(df['Close'], timeperiod=fast_period) * df['Factor'] + df.ta.ema(df['Close'], timeperiod=slow_period) * (1 - df['Factor'])
+                df['QQE_diff'] = df['Close'] - df['QQE']
+                df['QQE_hist'] = np.where(df['QQE_diff'] > 0, df['QQE_diff'], 0)
+                return df['QQE'], df['QQE_hist']
+            # Calculate QQE
+            qqe, qqe_hist = qqe(df)
+            # Create histogram colors
+            qqe_hist_colors = np.where(qqe_hist > 0, 'green', 'red')
+            qqe_hist_colors = np.where(qqe_hist == 0, 'gray', qqe_hist_colors)
+            fig.add_trace(go.Scatter(x=df.index, y=qqe, name='QQE'), row =3, col = 1)
+            fig.add_trace(go.Bar(x=df.index, y=qqe_hist, name='QQE Hist', marker_color=qqe_hist_colors), row =3, col = 1)
         elif indicator == "RSI":
             fig.add_trace(go.Scatter(x = df.index, y=df['RSI_14'], line_color = 'green', name = 'RSI'), row =3, col = 1)
         elif indicator == "ATR":    
@@ -360,7 +376,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
+indicators = ["Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
 
 default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 

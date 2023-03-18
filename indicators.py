@@ -217,7 +217,7 @@ def create_plot(df, indicators):
 #             qqe_hist_colors = np.where(df[QQE_hist] == 0, 'gray', qqe_hist_colors)
 #             fig.add_trace(go.Scatter(x=df.index, y=qqe, name='QQE'), row =3, col = 1)
 #             fig.add_trace(go.Bar(x=df.index, y=qqe_hist, name='QQE Hist', marker_color=qqe_hist_colors), row =3, col = 1)
-#             fig.add_trace(go.Scatter(x=df.index, y=qqe, name='QQE'), row =3, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=qqe, name='QQE'), row =3, col = 1)
             fig.add_trace(go.Bar(x=df.index, y=qqe_hist_pos, name='QQE Hist+', marker_color='green'), row =3, col = 1)
             fig.add_trace(go.Bar(x=df.index, y=qqe_hist_neg, name='QQE Hist-', marker_color='red'), row =3, col = 1)            
         elif indicator == "RSI":

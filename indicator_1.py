@@ -621,6 +621,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Bar(x=df.index, y= df['QQEl_14_5_4.236'],  marker_color='green', showlegend = False), row =3, col = 1)
             fig.add_trace(go.Bar(x=df.index, y= df['QQEs_14_5_4.236'],  marker_color='red', showlegend = False), row =3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y= df['QQE_14_5_4.236'],  line_color='blue', name = 'QQE SRI MA'), row =3, col = 1)
+        elif indicator == "Awesome Oscillator":
+            colors = ['green' if val > 0 else 'red' for val in df['AO_5_34']]
+            fig.add_trace(go.Bar(x=df.index, y= df['AO_5_34'],  marker_color=colors, showlegend = False), row = 5, col=1)
                 
     # Make it pretty
     layout = go.Layout(
@@ -666,7 +669,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD" ]
+indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD", "Awesome Oscillator" ]
 
 # default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 

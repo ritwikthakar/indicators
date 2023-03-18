@@ -97,10 +97,13 @@ sh = [md[i] - sb[i] for i in range(len(md))]
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
-    fig.add_trace(go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"), row=1, col=1)
 
     for indicator in indicators:
-        if indicator == '20SMA':
+        if indicator == 'Candlestick Chart':
+            fig.add_trace(go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"), row=1, col=1)
+        elif indicator == 'Heikin Ashi Candles':
+            fig.add_trace(go.Candlestick(x=df.index, open=df["HA_open"], high=df["HA_high"], low=df["ha_low"], close=df["ha_close"], name="Price"), row=1, col=1)
+        elif indicator == '20SMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].rolling(window=20).mean(), name='20SMA', line=dict(color='orange', width=2)), row=1, col=1)
         elif indicator == '8EMA':
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=8, adjust=False).mean(), name='8EMA', line=dict(color='purple', width=2)), row=1, col=1)
@@ -669,9 +672,9 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD", "Awesome Oscillator" ]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', '5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD", "Awesome Oscillator" ]
 
-# default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+# default_options = ['Candlestick Chart', "Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 
 selected_indicators = st.multiselect('Select Indicators', indicators)

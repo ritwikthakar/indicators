@@ -117,7 +117,7 @@ def create_plot(df, indicators):
         if indicator == 'Candlestick Chart':
             fig.add_trace(go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"), row=1, col=1)
         elif indicator == 'Heikin Ashi Candles':
-            fig.add_trace(go.Candlestick(x=df.index, open=df["HA_open"], high=df["HA_high"], low=df["Ha_low"], close=df["Ha_close"], name="Price"), row=1, col=1)
+            fig.add_trace(go.Candlestick(x=df.index, open=df["HA_open"], high=df["HA_high"], low=df["HA_low"], close=df["HA_close"], name="Price"), row=1, col=1)
         elif indicator == "Volume Based Support & Resistance":
             mean_volume = df['Volume'].mean()
             support_level = df[df['Volume'] < mean_volume]['Close'].max()

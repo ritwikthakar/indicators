@@ -102,19 +102,23 @@ def get_fill_color(label):
 def create_plot(df, indicators):
     fig = make_subplots(rows=5, cols=1, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing = 0.05, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2",  "Lower Indicator 3", "Lower Indicator 4"))
      
-    fig.append_trace(go.Candlestick(
-            x=df.index,
-            open=df['Open'],
-            high=df['High'],
-            low=df['Low'],
-            close=df['Adj Close'],
-            increasing_line_color='green',
-            decreasing_line_color='red',
-            showlegend=False
-        ), row=1, col=1
-    )
+#     fig.append_trace(go.Candlestick(
+#             x=df.index,
+#             open=df['Open'],
+#             high=df['High'],
+#             low=df['Low'],
+#             close=df['Adj Close'],
+#             increasing_line_color='green',
+#             decreasing_line_color='red',
+#             showlegend=False
+#         ), row=1, col=1
+#     )
     for indicator in indicators:
-        if indicator == "Volume Based Support & Resistance":
+        if indicator == 'Candlestick Chart':
+            fig.add_trace(go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"), row=1, col=1)
+        elif indicator == 'Heikin Ashi Candles':
+            fig.add_trace(go.Candlestick(x=df.index, open=df["HA_open"], high=df["HA_high"], low=df["Ha_low"], close=df["Ha_close"], name="Price"), row=1, col=1)
+        elif indicator == "Volume Based Support & Resistance":
             mean_volume = df['Volume'].mean()
             support_level = df[df['Volume'] < mean_volume]['Close'].max()
             resistance_level = df[df['Volume'] >= mean_volume]['Close'].min()
@@ -368,9 +372,9 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ["Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "Awesome Oscillator" ,"TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', "Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "Awesome Oscillator" ,"TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
 
-default_options = ["Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ['Candlestick Chart',"Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
 

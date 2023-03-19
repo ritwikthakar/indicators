@@ -216,6 +216,10 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['BOP'], line_color = 'Brown', name = 'BOP'), row = 3, col=1)
         elif indicator == "On Balance Volume (OBV)":
             fig.add_trace(go.Scatter(x = df.index, y=df['OBV'], line_color = 'purple', name = 'OBV'), row = 3, col=1)
+        elif indicator == "Accumulation Distrbution":
+            fig.add_trace(go.Scatter(x = df.index, y=df['AD'], line_color = 'purple', name = 'OBV'), row = 5, col=1)
+        elif indicator == "Accumulation Distrbution Oscillator":
+            fig.add_trace(go.Scatter(x = df.index, y=df['ADOSC_3_10'], line_color = 'purple', name = 'OBV'), row = 5, col=1)
         elif indicator == "Srochastic RSI":
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSIk_14_14_3_3'], line_color = 'orange', name = 'Stochastic RSI %K'), row = 4, col=1)
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSId_14_14_3_3'], line_color = 'blue', name = 'Stochastic RSI %D'), row = 4, col=1)
@@ -372,7 +376,7 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', "Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "Awesome Oscillator" ,"TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)","Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', "Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "Awesome Oscillator" ,"TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)", "Accumulation Distrbution" , "Accumulation Distrbution Oscillator" ,"Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
 
 default_options = ['Candlestick Chart',"Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 

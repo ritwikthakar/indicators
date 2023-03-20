@@ -65,31 +65,31 @@ if start_date and end_date:
             yshift=-10,
             align="left"
         )
-    for i, level in enumerate(extension_levels):
-        fig.add_shape(
-            type="line",
-            x0=stock_data.index[0],
-            y0=level,
-            x1=stock_data.index[-1],
-            y1=level,
-            line=dict(
-                color="red",
-                width=1,
-                dash="dashdot",
-            ),
-            name=f"Fib Extension {i+1}"
-        )
+#     for i, level in enumerate(extension_levels):
+#         fig.add_shape(
+#             type="line",
+#             x0=stock_data.index[0],
+#             y0=level,
+#             x1=stock_data.index[-1],
+#             y1=level,
+#             line=dict(
+#                 color="red",
+#                 width=1,
+#                 dash="dashdot",
+#             ),
+#             name=f"Fib Extension {i+1}"
+#         )
         
-        fig.add_annotation(
-            x=stock_data.index[-1],
-            y=extension_levels,
-            text=f"{level:.2f}",
-            showarrow=False,
-            font=dict(size=10),
-            xshift=10,
-            yshift=-10,
-            align="right"
-        )
+#         fig.add_annotation(
+#             x=stock_data.index[-1],
+#             y=extension_levels,
+#             text=f"{level:.2f}",
+#             showarrow=False,
+#             font=dict(size=10),
+#             xshift=10,
+#             yshift=-10,
+#             align="right"
+#         )
         
     layout = go.Layout(
 #         xaxis_rangeslider_visible=False, 

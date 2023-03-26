@@ -40,6 +40,10 @@ df.ta.sma(length=50, append=True)
 df.ta.sma(length=100, append=True)
 df.ta.sma(length=200, append=True)
 
+df.ta.zlma(close=df['Adj Close'], length=20, append=True)
+df.ta.zlma(close=df['Adj Close'], length=40, append=True)
+df.ta.zlma(close=df['Adj Close'], length=60, append=True)
+
 # Impulse MACD
 # Define input variables
 length_ma = 34
@@ -133,6 +137,10 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_9'], line_color = 'blue', name = '9 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_50'], line_color = 'green', name = '50 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_100'], line_color = 'yellow', name = '100 SMA'), row =1, col = 1)
+        elif indicator == "Zero Lag MA Ribbons":
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_20'], line_color = 'orange', name = '20 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_40'], line_color = 'green', name = '40 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_60'], line_color = 'red', name = '60 ZLMA'), row =1, col = 1)
         elif indicator == 'Percent %B':
             def bollinger_band_percent_b(close_prices, window_size=20, num_std_dev=2):
                 rolling_mean = close_prices.rolling(window=window_size).mean()
@@ -672,12 +680,12 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', '5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons",'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD", "Awesome Oscillator" ]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', '5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons", "Zero Lag MA Ribbons" ,'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD", "Awesome Oscillator" ]
 
-# default_options = ['Candlestick Chart', "Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ['Candlestick Chart', "Zero Lag MA Ribbons","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 
-selected_indicators = st.multiselect('Select Indicators', indicators)
+selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
 
 
 create_plot(df, selected_indicators)

@@ -37,6 +37,10 @@ df.ta.sma(length=50, append=True)
 df.ta.sma(length=100, append=True)
 df.ta.sma(length=200, append=True)
 
+df.ta.zlma(close=df['Adj Close'], length=20, append=True)
+df.ta.zlma(close=df['Adj Close'], length=40, append=True)
+df.ta.zlma(close=df['Adj Close'], length=60, append=True)
+
 df.ta.bbands(close=df['Adj Close'], length=20, std=2, append=True)
 
 # Define input variables
@@ -164,6 +168,10 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_9'], line_color = 'blue', name = '9 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_50'], line_color = 'green', name = '50 SMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['SMA_100'], line_color = 'yellow', name = '100 SMA'), row =1, col = 1)
+        elif indicator == "Zero Lag MA Ribbons":
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_20'], line_color = 'orange', name = '20 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_40'], line_color = 'green', name = '40 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_60'], line_color = 'red', name = '60 ZLMA'), row =1, col = 1)
         elif indicator == "Fibonacci Weighted Moving Average":
             fig.add_trace(go.Scatter(x = df.index, y=df['FWMA_10'], line_color = 'red', name = 'Fib Weighted MA'), row =1, col = 1)
         elif indicator == "200 EMA":
@@ -378,9 +386,9 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', "Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "Fibonacci Weighted Moving Average" , "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "Awesome Oscillator" ,"TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)", "Accumulation Distrbution" , "Accumulation Distrbution Oscillator" ,"Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', "Volume Based Support & Resistance", "Regression Channels" ,"Bollinger Bands", "Keltner Channels" , "Donchian Channels" , "EMA Ribbons", "SMA Ribbons", "Zero Lag MA Ribbons" , "Fibonacci Weighted Moving Average" , "200 EMA", "200 SMA", "Adaptive Moving Avergae", "Supertrend", "Parabolic Stop & Reverse (PSAR)", "MACD", "QQE MOD" ,"RSI", "ATR", "Chopiness Index" , "Squeeze Momentum Indicator Pro", "ADX", "Awesome Oscillator" ,"TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)" , "Balance of Power (BOP)", "On Balance Volume (OBV)", "Accumulation Distrbution" , "Accumulation Distrbution Oscillator" ,"Srochastic RSI" ,"Stochastic Oscillator", "Eleher's Sine Wave", "MACD 2", "Impulse MACD" , "Ichimoku Cloud"]
 
-default_options = ['Candlestick Chart',"Regression Channels","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+default_options = ['Candlestick Chart',"Zero Lag MA Ribbons","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
 

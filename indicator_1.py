@@ -682,10 +682,10 @@ def create_plot(df, indicators):
 
 indicators = ['Candlestick Chart', 'Heikin Ashi Candles', '5SMA','9SMA','20SMA', '50SMA', '200SMA', '8EMA','13EMA','21EMA','50EMA','200EMA',"EMA Ribbons","SMA Ribbons", "Zero Lag MA Ribbons" ,'Bollinger Bands','Double Bollinger Band','Percent %B','Bollinger Band Width','Bollinger Band Trend', "Keltner Channels" ,'Parabolic Stop & Reverse (PSAR)', "MACD 2" , 'Supertrend (Default)', 'Dual Supertrend (Fast)', 'Dual Supertrend (Medium)', 'Donchian Channels', 'Double Donchian Strategy', 'Regression Channels', 'RSI', 'MACD','Stochastic Oscillator', "Srochastic RSI" , 'Average True Range (ATR)','Average Directional Index (ADX)', "Squeeze Momentum Indicator Pro", "TTM Trend", "Rate of Change (ROC)", "Commodity Channel Index (CCI)", "Balance of Power (BOP)","Balance of Power (BOP)", "On Balance Volume (OBV)", "Chopiness Index", "Impulse MACD", "QQE MOD", "Awesome Oscillator" ]
 
-default_options = ['Candlestick Chart', "Zero Lag MA Ribbons","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
+# default_options = ['Candlestick Chart', "Zero Lag MA Ribbons","Parabolic Stop & Reverse (PSAR)", "MACD 2", "RSI", "Squeeze Momentum Indicator Pro", "ADX"]
 
 
-selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
+selected_indicators = st.multiselect('Select Indicators', indicators)
 
 
 create_plot(df, selected_indicators)

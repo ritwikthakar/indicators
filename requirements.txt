@@ -4,6 +4,6 @@ pandas_datareader==1.3.5
 pandas_ta==0.3.14b0
 plotly==5.7.0
 streamlit==1.16
-yfinance
+yfinance==0.1.63
 datetime
 

@@ -26,7 +26,7 @@ start = dt.datetime.today()-dt.timedelta(t)
 end = dt.datetime.today()
 df = yf.download(ticker, start, end, interval= i)
 
-df.ta.strategy("All", use_multiprocessing=False)
+df.ta.strategy("All", use_multiprocessing=True)
 
 df.ta.ema(length=8, append=True)
 df.ta.ema(length=13, append=True)

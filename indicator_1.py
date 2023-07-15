@@ -333,9 +333,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['KCBe_20_2'], line_color = 'gray', name = 'Keltner Channel Basis'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['KCUe_20_2'], line_color = 'gray', name = 'Keltner Channel Upper Band'), row =1, col = 1)
         elif indicator == "Squeeze Momentum Indicator Pro":
-            colors = ['green' if val > 0 else 'red' for val in df['SQZPRO_20_2.0_20_2_1.5_1']]
+            colors = ['lightseagreen' if val > 0 else 'lightsalmon' for val in df['SQZPRO_20_2.0_20_2_1.5_1']]
             fig.add_trace(go.Bar(x = df.index, y=df['SQZPRO_20_2.0_20_2_1.5_1'], marker_color=colors, name = 'Squeeze Momentum Pro'), row = 4, col =1)
-            fig.add_trace(go.Scatter(x = df[df['SQZPRO_OFF'] != 0].index, y=df[df['SQZPRO_OFF'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='olive', size=5), name = 'Squeeze Off'), row = 4, col =1)
+            fig.add_trace(go.Scatter(x = df[df['SQZPRO_OFF'] != 0].index, y=df[df['SQZPRO_OFF'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='green', size=5), name = 'Squeeze Off'), row = 4, col =1)
             fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_WIDE'] != 0].index, y=df[df['SQZPRO_ON_WIDE'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='gold', size=5), name = 'Wide Squeeze'), row = 4, col =1)
             fig.add_trace(go.Scatter(x = df[df['SQZPRO_NO'] != 0].index, y=df[df['SQZPRO_NO'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='blue', size=5), name = 'No Squeeze'), row = 4, col =1)
             fig.add_trace(go.Scatter(x = df[df['SQZPRO_ON_NORMAL'] != 0].index, y=df[df['SQZPRO_ON_NORMAL'] != 0]['SQZPRO_20_2.0_20_2_1.5_1'], mode = 'markers', marker = dict(color='orange', size=5), name = 'Normal Squeeze'), row = 4, col =1)

@@ -343,7 +343,7 @@ def create_plot(df, indicators):
         elif indicator == "QQE MOD":
             fig.add_trace(go.Scatter(x = df.index, y=df['QQE_14_5_4.236_RSIMA'], line_color = 'orange', name = 'QQE SRI MA'), row =2, col = 1)
             fig.add_trace(go.Bar(x=df.index, y= df['QQEl_14_5_4.236'],  marker_color='green', showlegend = False), row =2, col = 1)
-            fig.add_trace(go.Bar(x=df.index, y= df['QQEs_14_5_4.236'],  marker_color='red', showlegend = False), row =2, col = 1)
+            fig.add_trace(go.Bar(x=df.index, y= df['QQEs_14_5_4.236'],  marker_color='darkred', showlegend = False), row =2, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y= df['QQE_14_5_4.236'],  line_color='blue', name = 'QQE SRI MA'), row =2, col = 1)
         elif indicator == "Stochastic RSI":
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHRSIk_14_14_3_3'], line_color = 'orange', name = 'Stochastic RSI %K'), row = 4, col=1)

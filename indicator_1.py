@@ -273,12 +273,20 @@ df.ta.stochrsi(append=True)
 df.ta.zlma(close=df['Adj Close'], length=20, append=True)
 df.ta.zlma(close=df['Adj Close'], length=40, append=True)
 df.ta.zlma(close=df['Adj Close'], length=60, append=True)
+df.ta.zlma(close=df['Adj Close'], length=240, append=True)
 
 # Hull Moving Average ribbons
 df.ta.hma(close=df['Adj Close'], length=21, append=True)
 df.ta.hma(close=df['Adj Close'], length=55, append=True)
 df.ta.hma(close=df['Adj Close'], length=100, append=True)
+df.ta.hma(close=df['Adj Close'], length=200, append=True)
 
+# EMA Ribbons
+df.ta.ema(length=8, append=True)
+df.ta.ema(length=13, append=True)
+df.ta.ema(length=21, append=True)
+df.ta.ema(length=50, append=True)
+df.ta.ema(length=200, append=True)
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
@@ -321,15 +329,14 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['9SMA'], name='9 SMA', line=dict(color='blue', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['50SMA'], name='50 SMA', line=dict(color='green', width=2)))
-            fig.add_trace(go.Scatter(x=df.index, y=df['200SMA'], name='200 SMA', line=dict(color='red', width=2)))
         elif indicator == 'Bollinger Bands':
             fig.add_trace(go.Scatter(x=df.index, y=df['20SMA'], name='20 SMA', line=dict(color='black', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['upper_band'], name='Upper BB', line=dict(color='black', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['lower_band'], name='Lower BB', line=dict(color='black', width=2)))
         elif indicator == "Zero Lag MA Ribbons":
-            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_20'], line_color = 'orange', name = '20 ZLMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_40'], line_color = 'green', name = '40 ZLMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_60'], line_color = 'red', name = '60 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_20'], line_color = 'purple', name = '20 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_40'], line_color = 'blue', name = '40 ZLMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_60'], line_color = 'green', name = '60 ZLMA'), row =1, col = 1)
         elif indicator == "Keltner Channels":
             fig.add_trace(go.Scatter(x = df.index, y=df['KCLe_20_2'], line_color = 'gray', name = 'Keltner Channel Lower Baad'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['KCBe_20_2'], line_color = 'gray', name = 'Keltner Channel Basis'), row =1, col = 1)
@@ -355,8 +362,22 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D'), row = 4, col=1)
         elif indicator == "Hull Moving Averages":
             fig.add_trace(go.Scatter(x = df.index, y=df['HMA_21'], line_color ='purple', name = '21 HMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_55'], line_color ='green', name = '55 HMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_100'], line_color ='red', name = '100 HMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_55'], line_color ='blue', name = '55 HMA'), row =1, col = 1)
+        elif indicator == "EMA Ribbons":
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'purple', name = '8 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
+        elif indicator == "200 EMA":
+            fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=200, adjust=False).mean(), name='200EMA', line=dict(color='red', width=2)), row=1, col=1)
+        elif indicator == '200 SMA':
+            fig.add_trace(go.Scatter(x=df.index, y=df['Close'].rolling(window=200).mean(), name='200SMA', line=dict(color='red', width=2)), row=1, col=1)
+        elif indicator == '100 HMA':
+            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_100'], line_color ='green', name = '100 HMA'), row =1, col = 1)
+        elif indicator == '200 HMA':
+            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_200'], line_color ='red', name = '200 HMA'), row =1, col = 1)
+        elif indicator == '240 ZLMA':
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_240'], line_color = 'red', name = '240 ZLMA'), row =1, col = 1)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -401,7 +422,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

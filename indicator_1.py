@@ -289,7 +289,7 @@ df.ta.ema(length=50, append=True)
 df.ta.ema(length=200, append=True)
 
 # Market Bias
-df.ta.bias(close=df['Adj Close'], length=100, append=True)
+df.ta.bias(close=df['Adj Close'], length=26, append=True)
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
@@ -382,7 +382,7 @@ def create_plot(df, indicators):
         elif indicator == '240 ZLMA':
             fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_240'], line_color = 'red', name = '240 ZLMA'), row =1, col = 1)
         elif indicator == 'Market Bias':
-            fig.add_trace(go.Scatter(x = df.index, y=df['BIAS_SMA_100'], line_color ='brown', name = 'Market Bias'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['BIAS_SMA_26'], line_color ='brown', name = 'Market Bias'), row =1, col = 1)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',

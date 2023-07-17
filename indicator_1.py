@@ -382,7 +382,7 @@ def create_plot(df, indicators):
         elif indicator == '240 ZLMA':
             fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_240'], line_color = 'red', name = '240 ZLMA'), row =1, col = 1)
         elif indicator == 'Market Bias':
-            fig.add_trace(go.Scatter(x = df.index, y=df['BIAS_SMA_26'], line_color ='brown', name = 'Market Bias'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['BIAS_SMA_26'], line_color ='brown', name = 'Market Bias'), row =3, col = 1)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',

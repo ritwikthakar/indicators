@@ -263,6 +263,15 @@ df.ta.squeeze_pro(append=True)
 # QQE Mod
 df.ta.qqe(append=True)
 
+# Awesome Oscillator
+df.ta.ao(append=True)
+
+# Awesome Oscillator
+df.ta.ao(append=True)
+
+# Donchian Channels
+df.ta.donchian(append=True)
+
 # Stochastic Oscillators
 df.ta.stoch(append=True)
 
@@ -383,6 +392,13 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['ZL_EMA_240'], line_color = 'red', name = '240 ZLMA'), row =1, col = 1)
         elif indicator == 'Market Bias':
             fig.add_trace(go.Scatter(x = df.index, y=df['BIAS_SMA_26'], line_color ='brown', name = 'Market Bias'), row =3, col = 1)
+        elif indicator == "Awesome Oscillator":
+            colors = ['green' if val > 0 else 'red' for val in df['AO_5_34']]
+            fig.add_trace(go.Bar(x=df.index, y= df['AO_5_34'],  marker_color=colors, showlegend = False), row = 5, col=1)
+        elif indicator == "Donchian Channels":
+            fig.add_trace(go.Scatter(x = df.index, y=df['DCL_20_20'], line_color = 'skyblue', name = 'Donchian Channel Lower Baad'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['DCM_20_20'], line_color = 'skyblue', name = 'Donchian Channel Basis'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['DCU_20_20'], line_color = 'skyblue', name = 'Donchian Channel Upper Band'), row =1, col = 1)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -427,7 +443,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias']
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

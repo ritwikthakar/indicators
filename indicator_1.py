@@ -274,8 +274,10 @@ df.ta.zlma(close=df['Adj Close'], length=20, append=True)
 df.ta.zlma(close=df['Adj Close'], length=40, append=True)
 df.ta.zlma(close=df['Adj Close'], length=60, append=True)
 
-# Squeeze Momentum Pro
-
+# Hull Moving Average ribbons
+df.ta.hma(close=df['Adj Close'], length=21, append=True)
+df.ta.hma(close=df['Adj Close'], length=55, append=True)
+df.ta.hma(close=df['Adj Close'], length=100, append=True)
 
 
 def create_plot(df, indicators):
@@ -351,6 +353,10 @@ def create_plot(df, indicators):
         elif indicator == "Stochastic Oscillator":
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHk_14_3_3'], line_color = 'orange', name = 'Stochastic %K'), row = 4, col=1)
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D'), row = 4, col=1)
+        elif indicator == "Hull Moving Averages":
+            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_21'], line_color ='purple', name = '21 HMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_55'], line_color ='green', name = '55 HMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['HMA_100'], line_color ='red', name = '100 HMA'), row =1, col = 1)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -395,7 +401,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

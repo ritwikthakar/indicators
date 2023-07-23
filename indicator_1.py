@@ -268,6 +268,43 @@ def find_fractals(data):
 
 fractals = find_fractals(df)
 
+# Function to add Fibonacci retracement lines
+# Add Fibonacci retracement lines to the chart
+low_price = min(df['Low'])
+high_price = max(df['High'])
+
+def add_fibonacci_retracement(fig, low, high, start_date, end_date):
+    levels = [0, 0.382, 0.5, 0.618, 0.786, 1]
+    diff = high - low
+    for level in levels:
+        price = high - level * diff
+        fig.add_shape(
+            go_objs.layout.Shape(
+                type='line',
+                x0=start_date,
+                y0=price,
+                x1=end_date,
+                y1=price,
+                line=dict(color='grey', dash='dash')
+            )
+        )
+
+def add_fibonacci_extension(fig, low, high, start_date, end_date):
+    levels = [1, 1.618, 2.0, 2.618]
+    diff = high - low
+    for level in levels:
+        price = high + level * diff
+        fig.add_shape(
+            go_objs.layout.Shape(
+                type='line',
+                x0=start_date,
+                y0=high,
+                x1=end_date,
+                y1=price,
+                line=dict(color='grey', dash='dash')
+            )
+        )
+
 # Keltner Channel
 df.ta.kc(append=True)
 
@@ -427,6 +464,10 @@ def create_plot(df, indicators):
         elif indicator == "Fractals":
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        elif indicator == "Fibonacci Retracements":
+            add_fibonacci_retracement( fig, low_price, high_price, start, end)
+        elif indicator == "Fibonacci Extensions":
+            add_fibonacci_extension( fig, low_price, high_price, start, end)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -471,7 +512,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

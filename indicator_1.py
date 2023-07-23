@@ -14,6 +14,7 @@ import pandas_ta as ta
 import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
+import plotly.graph_objs as go_objs
 import plotly.subplots as sp
 from plotly.subplots import make_subplots
 

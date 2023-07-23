@@ -403,7 +403,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['DCM_20_20'], line_color = 'skyblue', name = 'Donchian Channel Basis'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['DCU_20_20'], line_color = 'skyblue', name = 'Donchian Channel Upper Band'), row =1, col = 1)
         elif indicator == 'Z Score':
-            fig.add_trace(go.Scatter(x = df.index, y=df['ZS_30'], line_color ='blue', name = 'Market Bias'), row =5, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['ZS_30'], line_color ='blue', name = 'Z Score'), row =5, col = 1)
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',

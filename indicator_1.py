@@ -475,8 +475,8 @@ def create_plot(df, indicators):
         elif indicator == "Fibonacci Extensions":
             add_fibonacci_extension( fig, low_price, high_price, start, end)
         elif indicator == "TD Sequential":
-            fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['close'], mode='markers', name='Buy Signal', marker=dict(color='green', symbol='triangle up', size=8)))
-            fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['close'], mode='markers', name='Sell Signal', marker=dict(color='red', symbol='triangle down', size=8)))
+            fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['Close'], mode='markers', name='Buy Signal', marker=dict(color='green', symbol='triangle up', size=8)))
+            fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['Close'], mode='markers', name='Sell Signal', marker=dict(color='red', symbol='triangle down', size=8)))
     
     # Make it pretty
     layout = go.Layout(

@@ -358,6 +358,9 @@ df.ta.zscore(append=True)
 # Gann High Low
 df.ta.hilo(append=True)
 
+# TD Sequential
+df.ta.td_seq(append=True)
+
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
 
@@ -469,6 +472,9 @@ def create_plot(df, indicators):
             add_fibonacci_retracement( fig, low_price, high_price, start, end)
         elif indicator == "Fibonacci Extensions":
             add_fibonacci_extension( fig, low_price, high_price, start, end)
+        elif indicator == "TD Sequential":
+            fig.add_trace(go.Scatter(x=df.index,y=df['TD_SEQ_UP'], mode='markers',marker=dict(color='green',symbol='star'),name='TD Sequential Up'))
+            fig.add_trace(go.Scatter(x=df.index,y=df['TD_SEQ_DN'], mode='markers',marker=dict(color='red',symbol='star'),name='TD Sequential Down'))
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',
@@ -513,7 +519,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

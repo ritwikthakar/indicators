@@ -360,6 +360,8 @@ df.ta.hilo(append=True)
 
 # TD Sequential
 df.ta.td_seq(append=True)
+buy_signals = df[df['TD_SEQ_BUY'] == 9]
+sell_signals = df[df['TD_SEQ_SELL'] == 9]
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
@@ -473,8 +475,8 @@ def create_plot(df, indicators):
         elif indicator == "Fibonacci Extensions":
             add_fibonacci_extension( fig, low_price, high_price, start, end)
         elif indicator == "TD Sequential":
-            fig.add_trace(go.Scatter(x=df.index,y=df['TD_SEQ_UP'], mode='markers',marker=dict(color='green',symbol='star'),name='TD Sequential Up'))
-            fig.add_trace(go.Scatter(x=df.index,y=df['TD_SEQ_DN'], mode='markers',marker=dict(color='red',symbol='star'),name='TD Sequential Down'))
+            fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['close'], mode='markers', name='Buy Signal', marker=dict(color='green', symbol='triangle up', size=8)))
+            fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['close'], mode='markers', name='Sell Signal', marker=dict(color='red', symbol='triangle down', size=8))
     # Make it pretty
     layout = go.Layout(
         plot_bgcolor='#efefef',

@@ -479,13 +479,13 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['close'], mode='markers', name='Sell Signal', marker=dict(color='red', symbol='triangle down', size=8))
     
     # Make it pretty
-        layout = go.Layout(
-        plot_bgcolor='#efefef',
-        # Font Families
-        font_family='Monospace',
-        font_color='#000000',
-        font_size=20,
-        height=1000, width=1200)
+layout = go.Layout(
+plot_bgcolor='#efefef',
+# Font Families
+font_family='Monospace',
+font_color='#000000',
+font_size=20,
+height=1000, width=1200)
 
     if i == '1d':
         fig.update_xaxes(

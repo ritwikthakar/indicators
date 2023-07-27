@@ -484,10 +484,10 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_LR'], line_color = 'black', name = 'Linear Regression Line'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_1'], line_color = 'green', name = '1 Std Dev Down'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_1'], line_color = 'red', name = '1 Std Dev Up'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_2'], line_color = 'green', name = '2 Std Dev Down', , visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_2'], line_color = 'red', name = '2 Std Dev Up', , visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_3'], line_color = 'green', name = '3 Std Dev Down', , visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_3'], line_color = 'red', name = '3 Std Dev Up', , visible='legendonly'), row =1, col = 1)    
+            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_2'], line_color = 'green', name = '2 Std Dev Down', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_2'], line_color = 'red', name = '2 Std Dev Up', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_3'], line_color = 'green', name = '3 Std Dev Down', visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_3'], line_color = 'red', name = '3 Std Dev Up', visible='legendonly'), row =1, col = 1)    
     # Make it pretty
     layout = go.Layout(
     plot_bgcolor='#efefef',

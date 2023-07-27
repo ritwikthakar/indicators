@@ -366,6 +366,9 @@ sell_signals = df[df['TD_SEQ_UP'] == 9]
 # Regression Channels
 df.ta.tos_stdevall(append=True)
 
+# Know Sure Thing (KST)
+df.ta.kst(append=True)
+
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
 
@@ -487,7 +490,10 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_2'], line_color = 'green', name = '2 Std Dev Down', visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_2'], line_color = 'red', name = '2 Std Dev Up', visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_3'], line_color = 'green', name = '3 Std Dev Down', visible='legendonly'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_3'], line_color = 'red', name = '3 Std Dev Up', visible='legendonly'), row =1, col = 1)    
+            fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_3'], line_color = 'red', name = '3 Std Dev Up', visible='legendonly'), row =1, col = 1)
+         elif indicator == 'Know Sure Thing (KST)':
+            fig.add_trace(go.Scatter(x=df.index, y=df['KST_10_15_20_30_10_10_10_15'], name='KST', line=dict(color='green', width=2)), row = 3, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['KSTs_9'], name='KST Signal', line=dict(color='red', width=2)), row = 3, col = 1)
     # Make it pretty
     layout = go.Layout(
     plot_bgcolor='#efefef',
@@ -532,7 +538,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", 'Know Sure Thing (KST)']
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

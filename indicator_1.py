@@ -491,7 +491,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_2'], line_color = 'red', name = '2 Std Dev Up', visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_3'], line_color = 'green', name = '3 Std Dev Down', visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_3'], line_color = 'red', name = '3 Std Dev Up', visible='legendonly'), row =1, col = 1)
-         elif indicator == 'Know Sure Thing (KST)':
+         elif indicator == "Know Sure Thing":
             fig.add_trace(go.Scatter(x=df.index, y=df['KST_10_15_20_30_10_10_10_15'], name='KST', line=dict(color='green', width=2)), row = 3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['KSTs_9'], name='KST Signal', line=dict(color='red', width=2)), row = 3, col = 1)
     # Make it pretty
@@ -538,7 +538,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", 'Know Sure Thing (KST)']
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

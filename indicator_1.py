@@ -491,7 +491,7 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_2'], line_color = 'red', name = '2 Std Dev Up', visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_L_3'], line_color = 'green', name = '3 Std Dev Down', visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['TOS_STDEVALL_U_3'], line_color = 'red', name = '3 Std Dev Up', visible='legendonly'), row =1, col = 1)
-         elif indicator == "Know Sure Thing":
+        elif indicator == "Know Sure Thing":
             fig.add_trace(go.Scatter(x=df.index, y=df['KST_10_15_20_30_10_10_10_15'], name='KST', line=dict(color='green', width=2)), row = 3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['KSTs_9'], name='KST Signal', line=dict(color='red', width=2)), row = 3, col = 1)
     # Make it pretty

@@ -369,6 +369,51 @@ df.ta.tos_stdevall(append=True)
 # Know Sure Thing (KST)
 df.ta.kst(append=True)
 
+# Half Trend
+df.ta.hl2(append=True)
+df.ta.atr(append=True)
+atr_multiplier = 2
+df['upper_trend'] = df['HL2'] - atr_multiplier * df['ATRr_14']
+df['lower_trend'] = df['HL2'] + atr_multiplier * df['ATRr_14']
+df['half_trend'] = df['Adj Close'].where(df['Adj Close'] > df['upper_trend'], df['lower_trend'])
+buy_ht = (df["half_trend"] > df['Close'].shift(1)) & (df["half_trend"] < df['Close'])
+sell_ht = (df["half_trend"] < df['Close'].shift(1)) & (df["half_trend"] > df['Close'])
+
+# Elher's Decycler
+
+def decycler(data, hp_length):
+    """Python implementation of Simple Decycler indicator created by John Ehlers
+    :param data: list of price data
+    :type data: list
+    :param hp_length: High Pass filter length
+    :type hp_length: int
+    :return: Decycler applied price data
+    :rtype: list
+    """
+    hpf = []
+
+    for i, _ in enumerate(data):
+        if i < 2:
+            hpf.append(0)
+        else:
+            alpha_arg = 2 * 3.14159 / (hp_length * 1.414)
+            alpha1 = (math.cos(alpha_arg) + math.sin(alpha_arg) - 1) / math.cos(alpha_arg)
+            hpf.append(math.pow(1.0-alpha1/2.0, 2)*(data[i]-2*data[i-1]+data[i-2]) + 2*(1-alpha1)*hpf[i-1] - math.pow(1-alpha1, 2)*hpf[i-2])
+
+    dec = []
+    for i, _ in enumerate(data):
+        dec.append(data[i] - hpf[i])
+
+    return dec
+
+df['decycler'] = decycler(df['Adj Close'], 20)
+df['decycler_signal_buy'] = np.where(df["decycler"]<df['Adj Close'], 1, 0)
+df['decycler_p'] = df['decycler_signal_buy'] * df['decycler']
+df['decycler_signal_sell'] = np.where(df["decycler"]>df['Adj Close'], 1, 0)
+df['decycler_n'] = df['decycler_signal_sell'] * df['decycler']
+df['decycler_p'].replace(0.000000, np.nan, inplace=True)
+df['decycler_n'].replace(0.000000, np.nan, inplace=True)
+
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
 
@@ -494,6 +539,18 @@ def create_plot(df, indicators):
         elif indicator == "Know Sure Thing":
             fig.add_trace(go.Scatter(x=df.index, y=df['KST_10_15_20_30_10_10_10_15'], name='KST', line=dict(color='green', width=2)), row = 3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['KSTs_9'], name='KST Signal', line=dict(color='red', width=2)), row = 3, col = 1)
+         elif indicator == "Half Trend":
+            fig.add_trace(go.Scatter(x=df.index,y=df['upper_trend'], mode='lines',line=dict(color='red'),name='HT Up Trend'))
+            fig.add_trace(go.Scatter(x=df.index,y=df['lower_trend'], mode='lines',line=dict(color='green'),name='HT Down Trend'))
+            fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
+#            fig.add_trace(go.Scatter(x=df.index[buy_ht], y=df['half_trend'][buy_ht], mode="markers", marker=dict(symbol="triangle-up", size=10, color="green"), name="Buy HT"))
+#            fig.add_trace(go.Scatter(x=df.index[sell_ht], y=df['half_trend'][sell_ht], mode="markers", marker=dict(symbol="triangle-down", size=10, color="red"), name="Sell HT"))
+            for date, price, marker_type in fractals:
+                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        elif indicator == "Decycler":
+            fig.add_trace(go.Scatter(x=df.index, y=df['decycler_p'], name='Decycler Bull', line = dict(color='green', width=2)))
+            fig.add_trace(go.Scatter(x=df.index, y=df['decycler_n'], name='Decycler Bear',line = dict(color='red', width=2)))
+
     # Make it pretty
     layout = go.Layout(
     plot_bgcolor='#efefef',
@@ -538,7 +595,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", ,"Half Trend", "Decycler"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

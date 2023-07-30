@@ -542,7 +542,12 @@ def create_plot(df, indicators):
         elif indicator == "Decycler":
             fig.add_trace(go.Scatter(x=df.index, y=df['decycler_p'], name='Decycler Bull', line = dict(color='green', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['decycler_n'], name='Decycler Bear',line = dict(color='red', width=2)))
-
+        elif indicator == "Half Trend":
+            fig.add_trace(go.Scatter(x=df.index,y=df['upper_trend'], mode='lines',line=dict(color='red'),name='HT Up Trend'))
+            fig.add_trace(go.Scatter(x=df.index,y=df['lower_trend'], mode='lines',line=dict(color='green'),name='HT Down Trend'))
+            fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
+            for date, price, marker_type in fractals:
+                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
     # Make it pretty
     layout = go.Layout(
     plot_bgcolor='#efefef',

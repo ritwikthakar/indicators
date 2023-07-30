@@ -539,14 +539,6 @@ def create_plot(df, indicators):
         elif indicator == "Know Sure Thing":
             fig.add_trace(go.Scatter(x=df.index, y=df['KST_10_15_20_30_10_10_10_15'], name='KST', line=dict(color='green', width=2)), row = 3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['KSTs_9'], name='KST Signal', line=dict(color='red', width=2)), row = 3, col = 1)
-         elif indicator == "Half Trend":
-            fig.add_trace(go.Scatter(x=df.index,y=df['upper_trend'], mode='lines',line=dict(color='red'),name='HT Up Trend'))
-            fig.add_trace(go.Scatter(x=df.index,y=df['lower_trend'], mode='lines',line=dict(color='green'),name='HT Down Trend'))
-            fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
-#            fig.add_trace(go.Scatter(x=df.index[buy_ht], y=df['half_trend'][buy_ht], mode="markers", marker=dict(symbol="triangle-up", size=10, color="green"), name="Buy HT"))
-#            fig.add_trace(go.Scatter(x=df.index[sell_ht], y=df['half_trend'][sell_ht], mode="markers", marker=dict(symbol="triangle-down", size=10, color="red"), name="Sell HT"))
-            for date, price, marker_type in fractals:
-                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         elif indicator == "Decycler":
             fig.add_trace(go.Scatter(x=df.index, y=df['decycler_p'], name='Decycler Bull', line = dict(color='green', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['decycler_n'], name='Decycler Bear',line = dict(color='red', width=2)))

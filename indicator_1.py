@@ -416,7 +416,7 @@ df['decycler_n'].replace(0.000000, np.nan, inplace=True)
 
 # Candlestick Patterns
 
-dfc = df.ta.cdl_pattern("all", append=True)
+df.ta.cdl_pattern("all", append=True)
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
@@ -553,35 +553,35 @@ def create_plot(df, indicators):
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         elif indicator == "Engulfing Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_ENGULFING'], mode="markers", marker=dict(size=10, color="red"), name="Engulfing"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_ENGULFING'], mode="markers", marker=dict(size=10, color="red"), name="Engulfing"), row = 2, col = 1)
         elif indicator == "Doji Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
         elif indicator == "Dragonfly Doji Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DRAGONFLYDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Dragonfly Doji"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_DRAGONFLYDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Dragonfly Doji"), row = 2, col = 1)
         elif indicator == "Gravestone Doji Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_GRAVESTONEDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Gravestone Doji"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_GRAVESTONEDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Gravestone Doji"), row = 2, col = 1)
         elif indicator == "Hammer Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_HAMMER'], mode="markers", marker=dict(size=10, color="red"), name="Hammer"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_HAMMER'], mode="markers", marker=dict(size=10, color="red"), name="Hammer"), row = 2, col = 1)
         elif indicator == "Inverted Hammer Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_INVERTEDHAMMER'], mode="markers", marker=dict(size=10, color="red"), name="Inverted Hammer"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_INVERTEDHAMMER'], mode="markers", marker=dict(size=10, color="red"), name="Inverted Hammer"), row = 2, col = 1)
         elif indicator == "Morning Star Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_MORNINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Morning Star"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_MORNINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Morning Star"), row = 2, col = 1)
         elif indicator == "Evening Star Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_EVENINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Evening Star"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_EVENINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Evening Star"), row = 2, col = 1)
         elif indicator == "Abandoned Baby Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_ABANDONEDBABY'], mode="markers", marker=dict(size=10, color="red"), name="Abandoned Baby"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_ABANDONEDBABY'], mode="markers", marker=dict(size=10, color="red"), name="Abandoned Baby"), row = 2, col = 1)
         elif indicator == "Hanging Man Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_HANGINGMAN'], mode="markers", marker=dict(size=10, color="red"), name="Hanging Man"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_HANGINGMAN'], mode="markers", marker=dict(size=10, color="red"), name="Hanging Man"), row = 2, col = 1)
         elif indicator == "3 White Soldiers":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_3WHITESOLDIERS'], mode="markers", marker=dict(size=10, color="red"), name="3 White Soldiers"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_3WHITESOLDIERS'], mode="markers", marker=dict(size=10, color="red"), name="3 White Soldiers"), row = 2, col = 1)
         elif indicator == "3 Black Crows":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_3BLACKCROWS'], mode="markers", marker=dict(size=10, color="red"), name="3 Black Crows"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_3BLACKCROWS'], mode="markers", marker=dict(size=10, color="red"), name="3 Black Crows"), row = 2, col = 1)
         elif indicator == "3 Line Strike":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_3LINESTRIKE'], mode="markers", marker=dict(size=10, color="red"), name="3 Line Strike"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_3LINESTRIKE'], mode="markers", marker=dict(size=10, color="red"), name="3 Line Strike"), row = 2, col = 1)
         elif indicator == "Shooting Star":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_SHOOTINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Shooting Star"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_SHOOTINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Shooting Star"), row = 2, col = 1)
         elif indicator == "Tristar":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_TRISTAR'], mode="markers", marker=dict(size=10, color="red"), name="Tristar"), row = 2, col = 1)
+            fig.add_trace(go.Scatter(x=df.index, y=df['CDL_TRISTAR'], mode="markers", marker=dict(size=10, color="red"), name="Tristar"), row = 2, col = 1)
     # Make it pretty
     layout = go.Layout(
     plot_bgcolor='#efefef',

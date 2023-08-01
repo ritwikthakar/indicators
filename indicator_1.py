@@ -414,6 +414,29 @@ df['decycler_n'] = df['decycler_signal_sell'] * df['decycler']
 df['decycler_p'].replace(0.000000, np.nan, inplace=True)
 df['decycler_n'].replace(0.000000, np.nan, inplace=True)
 
+# Engulfing Candles
+def find_engulfing_candles(prices):
+    # Compute the candle body size for each candle
+    prices['BodySize'] = abs(prices['Open'] - prices['Close'])
+    
+    # Check for bullish engulfing patterns
+    bullish_engulfing = (prices['Open'] > prices['Close'].shift(1)) & \
+                        (prices['Close'] < prices['Open'].shift(1)) & \
+                        (prices['BodySize'] > prices['BodySize'].shift(1))
+    
+    # Check for bearish engulfing patterns
+    bearish_engulfing = (prices['Open'] < prices['Close'].shift(1)) & \
+                        (prices['Close'] > prices['Open'].shift(1)) & \
+                        (prices['BodySize'] > prices['BodySize'].shift(1))
+    
+    # Create a new DataFrame to store engulfing candles
+    engulfing_candles = pd.DataFrame(index=prices.index)
+    engulfing_candles['Bullish'] = bullish_engulfing
+    engulfing_candles['Bearish'] = bearish_engulfing
+    
+    return engulfing_candles
+engulfing_candles = find_engulfing_candles(df)
+
 # Candlestick Patterns
 dfc = pd.DataFrame()
 dfc = df.ta.cdl_pattern("all")
@@ -553,7 +576,11 @@ def create_plot(df, indicators):
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         elif indicator == "Engulfing Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_ENGULFING'], mode="markers", marker=dict(size=10, color="red"), name="Engulfing"), row = 2, col = 1)
+            bullish_engulfing_dates = engulfing_candles[engulfing_candles['Bullish']].index
+            fig.add_trace(go.Scatter(x=bullish_engulfing_dates, y=df.loc[bullish_engulfing_dates, 'Low'], mode='markers', name='Bullish Engulfing', marker=dict(color='green', size=10)))
+            # Add bearish engulfing candles
+            bearish_engulfing_dates = engulfing_candles[engulfing_candles['Bearish']].index
+            fig.add_trace(go.Scatter(x=bearish_engulfing_dates, y=df.loc[bearish_engulfing_dates, 'High'], mode='markers', name='Bearish Engulfing', marker=dict(color='red', size=10)))
         elif indicator == "Doji Candles":
             fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
         elif indicator == "Dragonfly Doji Candles":

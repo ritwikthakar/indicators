@@ -437,6 +437,22 @@ def find_engulfing_candles(prices):
     return engulfing_candles
 engulfing_candles = find_engulfing_candles(df)
 
+# Doji
+def find_doji_candles(prices):
+    # Calculate the size of the candle body
+    prices['BodySize'] = abs(prices['Open'] - prices['Close'])
+    
+    # Check for Doji patterns
+    doji = prices.ta.cdl_doji()
+    
+    # Create a new DataFrame to store Doji candles
+    doji_candles = pd.DataFrame(index=prices.index)
+    doji_candles['Doji'] = doji != 0
+    
+    return doji_candles
+doji_candles = find_doji_candles(df)
+
+
 # Candlestick Patterns
 dfc = pd.DataFrame()
 dfc = df.ta.cdl_pattern("all")
@@ -582,7 +598,8 @@ def create_plot(df, indicators):
             bearish_engulfing_dates = engulfing_candles[engulfing_candles['Bearish']].index
             fig.add_trace(go.Scatter(x=bearish_engulfing_dates, y=df.loc[bearish_engulfing_dates, 'High'], mode='markers', name='Bearish Engulfing', marker=dict(color='red', size=10)))
         elif indicator == "Doji Candles":
-            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
+            doji_dates = doji_candles[doji_candles['Doji']].index
+            fig.add_trace(go.Scatter(x=doji_dates, y=df.loc[doji_dates, 'Low'], mode='markers', name='Doji', marker=dict(color='blue', size=8)))
         elif indicator == "Dragonfly Doji Candles":
             fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DRAGONFLYDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Dragonfly Doji"), row = 2, col = 1)
         elif indicator == "Gravestone Doji Candles":

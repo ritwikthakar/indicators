@@ -381,7 +381,7 @@ sell_ht = (df["half_trend"] < df['Close'].shift(1)) & (df["half_trend"] > df['Cl
 
 # Candlestick Patterns
 
-dfc=df.ta.cdl_pattern("all", append=True)
+dfc = df.ta.cdl_pattern("all", append=True)
 
 # Elher's Decycler
 

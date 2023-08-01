@@ -379,10 +379,6 @@ df['half_trend'] = df['Adj Close'].where(df['Adj Close'] > df['upper_trend'], df
 buy_ht = (df["half_trend"] > df['Close'].shift(1)) & (df["half_trend"] < df['Close'])
 sell_ht = (df["half_trend"] < df['Close'].shift(1)) & (df["half_trend"] > df['Close'])
 
-# Candlestick Patterns
-
-dfc = df.ta.cdl_pattern("all", append=True)
-
 # Elher's Decycler
 
 def decycler(data, hp_length):
@@ -417,6 +413,10 @@ df['decycler_signal_sell'] = np.where(df["decycler"]>df['Adj Close'], 1, 0)
 df['decycler_n'] = df['decycler_signal_sell'] * df['decycler']
 df['decycler_p'].replace(0.000000, np.nan, inplace=True)
 df['decycler_n'].replace(0.000000, np.nan, inplace=True)
+
+# Candlestick Patterns
+
+dfc = df.ta.cdl_pattern("all", append=True)
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))

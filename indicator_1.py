@@ -441,14 +441,17 @@ engulfing_candles = find_engulfing_candles(df)
 def find_doji_candles(prices):
     # Calculate the size of the candle body
     prices['BodySize'] = abs(prices['Open'] - prices['Close'])
-    
-    # Check for Doji patterns
-    doji = prices.ta.cdl_doji()
-    
-    # Create a new DataFrame to store Doji candles
+
+    # Define a tolerance level for considering a candle as a doji
+    tolerance = 0.05
+
+    # Check for doji patterns
+    doji = (prices['BodySize'] <= tolerance * prices['Open'])
+
+    # Create a new DataFrame to store doji candles
     doji_candles = pd.DataFrame(index=prices.index)
-    doji_candles['Doji'] = doji != 0
-    
+    doji_candles['Doji'] = doji
+
     return doji_candles
 doji_candles = find_doji_candles(df)
 

@@ -416,8 +416,7 @@ df['decycler_n'].replace(0.000000, np.nan, inplace=True)
 
 # Candlestick Patterns
 dfc = pd.DataFrame()
-dfc = yf.download(ticker, start, end, interval= i)
-dfc.ta.cdl_pattern("all")
+dfc = df.ta.cdl_pattern("all")
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))

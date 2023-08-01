@@ -443,7 +443,7 @@ def find_doji_candles(prices):
     prices['BodySize'] = abs(prices['Open'] - prices['Close'])
 
     # Define a tolerance level for considering a candle as a doji
-    tolerance = 0.05
+    tolerance = 0.01
 
     # Check for doji patterns
     doji = (prices['BodySize'] <= tolerance * prices['Open'])

@@ -379,6 +379,10 @@ df['half_trend'] = df['Adj Close'].where(df['Adj Close'] > df['upper_trend'], df
 buy_ht = (df["half_trend"] > df['Close'].shift(1)) & (df["half_trend"] < df['Close'])
 sell_ht = (df["half_trend"] < df['Close'].shift(1)) & (df["half_trend"] > df['Close'])
 
+# Candlestick Patterns
+
+dfc=df.ta.cdl_pattern("all", append=True)
+
 # Elher's Decycler
 
 def decycler(data, hp_length):
@@ -548,6 +552,36 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        elif indicator == "Engulfing Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_ENGULFING'], mode="markers", marker=dict(size=10, color="red"), name="Engulfing"), row = 2, col = 1)
+        elif indicator == "Doji Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
+        elif indicator == "Dragonfly Doji Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DRAGONFLYDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Dragonfly Doji"), row = 2, col = 1)
+        elif indicator == "Gravestone Doji Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_GRAVESTONEDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Gravestone Doji"), row = 2, col = 1)
+        elif indicator == "Hammer Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_HAMMER'], mode="markers", marker=dict(size=10, color="red"), name="Hammer"), row = 2, col = 1)
+        elif indicator == "Inverted Hammer Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_INVERTEDHAMMER'], mode="markers", marker=dict(size=10, color="red"), name="Inverted Hammer"), row = 2, col = 1)
+        elif indicator == "Morning Star Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_MORNINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Morning Star"), row = 2, col = 1)
+        elif indicator == "Evening Star Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_EVENINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Evening Star"), row = 2, col = 1)
+        elif indicator == "Abandoned Baby Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_ABANDONEDBABY'], mode="markers", marker=dict(size=10, color="red"), name="Abandoned Baby"), row = 2, col = 1)
+        elif indicator == "Hanging Man Candles":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_HANGINGMAN'], mode="markers", marker=dict(size=10, color="red"), name="Hanging Man"), row = 2, col = 1)
+        elif indicator == "3 White Soldiers":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_3WHITESOLDIERS'], mode="markers", marker=dict(size=10, color="red"), name="3 White Soldiers"), row = 2, col = 1)
+        elif indicator == "3 Black Crows":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_3BLACKCROWS'], mode="markers", marker=dict(size=10, color="red"), name="3 Black Crows"), row = 2, col = 1)
+        elif indicator == "3 Line Strike":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_3LINESTRIKE'], mode="markers", marker=dict(size=10, color="red"), name="3 Line Strike"), row = 2, col = 1)
+        elif indicator == "Shooting Star":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_SHOOTINGSTAR'], mode="markers", marker=dict(size=10, color="red"), name="Shooting Star"), row = 2, col = 1)
+        elif indicator == "Tristar":
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_TRISTAR'], mode="markers", marker=dict(size=10, color="red"), name="Tristar"), row = 2, col = 1)
     # Make it pretty
     layout = go.Layout(
     plot_bgcolor='#efefef',
@@ -592,7 +626,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing" ,"Half Trend", "Decycler"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing" ,"Half Trend", "Decycler","Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

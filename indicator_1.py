@@ -606,8 +606,7 @@ def create_plot(df, indicators):
             bearish_engulfing_dates = engulfing_candles[engulfing_candles['Bearish']].index
             fig.add_trace(go.Scatter(x=bearish_engulfing_dates, y=df.loc[bearish_engulfing_dates, 'High'], mode='markers', name='Bearish Engulfing', marker=dict(color='red', size=10)))
         elif indicator == "Doji Candles":
-            doji_dates = doji_candles[doji_candles['Doji']].index
-            fig.add_trace(go.Scatter(x=doji_dates, y=df.loc[doji_dates, 'Low'], mode='markers', name='Doji', marker=dict(color='blue', size=8)))
+            fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
         elif indicator == "Dragonfly Doji Candles":
             fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DRAGONFLYDOJI'], mode="markers", marker=dict(size=10, color="red"), name="Dragonfly Doji"), row = 2, col = 1)
         elif indicator == "Gravestone Doji Candles":

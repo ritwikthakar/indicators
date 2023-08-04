@@ -440,28 +440,11 @@ def find_engulfing_candles(prices):
     return engulfing_candles
 engulfing_candles = find_engulfing_candles(df)
 
-# Doji
-def find_doji_candles(prices):
-    # Calculate the size of the candle body
-    prices['BodySize'] = abs(prices['Open'] - prices['Close'])
-
-    # Define a tolerance level for considering a candle as a doji
-    tolerance = 0.01
-
-    # Check for doji patterns
-    doji = (prices['BodySize'] <= tolerance * prices['Open'])
-
-    # Create a new DataFrame to store doji candles
-    doji_candles = pd.DataFrame(index=prices.index)
-    doji_candles['Doji'] = doji
-
-    return doji_candles
-doji_candles = find_doji_candles(df)
-
 
 # Candlestick Patterns
 dfc = df.ta.cdl_pattern(name="all")
-st.write(dfc)
+dfc = df.ta.cdl_pattern(name="all")
+
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
 

@@ -688,3 +688,5 @@ selected_indicators = st.multiselect('Select Indicators', indicators, default = 
 
 
 create_plot(df, selected_indicators)
+
+st.write(dfc['CDL_INVERTEDHAMMER'])

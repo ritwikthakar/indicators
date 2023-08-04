@@ -460,8 +460,7 @@ doji_candles = find_doji_candles(df)
 
 
 # Candlestick Patterns
-dfc = pd.DataFrame()
-dfc = df.ta.cdl_pattern("all")
+df = df.ta.cdl_pattern(name="all")
 
 def create_plot(df, indicators):
     fig = sp.make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[0.4, 0.15, 0.15, 0.15, 0.15], vertical_spacing=0.02, subplot_titles=(f"{ticker.upper()} Daily Candlestick Chart", "Lower Indicator 1", "Lower Indicator 2", "Lower Indicator 3", "Lower Indicator 4"))
@@ -688,5 +687,3 @@ selected_indicators = st.multiselect('Select Indicators', indicators, default = 
 
 
 create_plot(df, selected_indicators)
-
-st.write(dfc['CDL_INVERTEDHAMMER'])

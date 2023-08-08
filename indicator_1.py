@@ -440,6 +440,12 @@ def find_engulfing_candles(prices):
     return engulfing_candles
 engulfing_candles = find_engulfing_candles(df)
 
+# Swing High & Swing Low
+df.ta.increasing(append=True)
+df.ta.decreasing(append=True)
+
+# RSI
+df.ta.rsi(append=True)
 
 # Candlestick Patterns
 dfc = df.ta.cdl_pattern(name="all")
@@ -454,6 +460,8 @@ def create_plot(df, indicators):
         elif indicator == 'Heikin Ashi Candles':
             fig.add_trace(go.Candlestick(x=df.index, open=df["HA_Open"], high=df["HA_High"], low=df["HA_Low"], close=df["HA_Close"], name="Price"), row=1, col=1)
         elif indicator == 'RSI':
+            fig.add_trace(go.Scatter(x=df.index, y=df["RSI_14"], name="RSI"), row=2, col=1)
+        elif indicator == 'RSI Divergence':
             fig.add_trace(go.Scatter(x=df.index, y=df["RSI"], name="RSI"), row=2, col=1)
             fig.add_trace(go.Scatter(x=df.index[buy_signal], y=df["RSI"][buy_signal], mode="markers", marker=dict(symbol="triangle-up", size=10, color="green"), name="Buy"), row=2, col=1)
             fig.add_trace(go.Scatter(x=df.index[sell_signal], y=df["RSI"][sell_signal], mode="markers", marker=dict(symbol="triangle-down", size=10, color="red"), name="Sell"), row=2, col=1)
@@ -582,6 +590,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        elif indicator == "Swing High Swing Low":
+            fig.add_trace(go.Scatter(x=df[df['INC_1'] == 1].index,y=df[df['INC_1'] == 1]['High'],mode='lines+markers',name='Swing Highs',marker=dict(color='green')))
+            fig.add_trace(go.Scatter(x=df[df['DEC_1'] == 1].index,y=df[df['DEC_1'] == 1]['Low'],mode='lines+markers',name='Swing Lows',marker=dict(color='red')))
         elif indicator == "Engulfing Candles":
             bullish_engulfing_dates = engulfing_candles[engulfing_candles['Bullish']].index
             fig.add_trace(go.Scatter(x=bullish_engulfing_dates, y=df.loc[bullish_engulfing_dates, 'Low'], mode='markers', name='Bullish Engulfing', marker=dict(color='green', size=10)))
@@ -660,7 +671,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler","Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

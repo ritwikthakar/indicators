@@ -331,7 +331,7 @@ df.ta.stoch(append=True)
 df.ta.stochrsi(append=True)
 
 # M Stochastic
-df.ta.stoch(k=12, d=3, smooth_k=6)
+mstoch = df.ta.stoch(k=12, d=3, smooth_k=6)
 
 # Zero Lag Moving Average ribbons
 df.ta.zlma(close=df['Adj Close'], length=20, append=True)
@@ -346,11 +346,19 @@ df.ta.hma(close=df['Adj Close'], length=100, append=True)
 df.ta.hma(close=df['Adj Close'], length=200, append=True)
 
 # EMA Ribbons
+df.ta.ema(length=5, append=True)
 df.ta.ema(length=8, append=True)
 df.ta.ema(length=13, append=True)
 df.ta.ema(length=21, append=True)
 df.ta.ema(length=50, append=True)
 df.ta.ema(length=200, append=True)
+
+# MACD Moving Averages
+df.ta.ema(length=12, append=True)
+df.ta.ema(length=26, append=True)
+df.ta.ema(length=50, append=True)
+df.ta.ema(length=100, append=True)
+
 
 # Market Bias
 df.ta.bias(close=df['Adj Close'], length=26, append=True)
@@ -529,16 +537,22 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHk_14_3_3'], line_color = 'orange', name = 'Stochastic %K'), row = 5, col=1)
             fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_14_3_3'], line_color = 'blue', name = 'Stochastic %D'), row = 5, col=1)
         elif indicator == "M Stochastic":
-            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHk_12_3_6'], line_color = 'orange', name = 'Stochastic %K'), row = 5, col=1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['STOCHd_12_3_6'], line_color = 'blue', name = 'Stochastic %D'), row = 5, col=1)
+            fig.add_trace(go.Scatter(x = mstoch.index, y=mstoch.STOCHk_12_3_6, line_color = 'orange', name = 'Stochastic %K'), row = 5, col=1)
+            fig.add_trace(go.Scatter(x = mstoch.index, y=mstoch.STOCHd_12_3_6, line_color = 'blue', name = 'Stochastic %D'), row = 5, col=1)
         elif indicator == "Hull Moving Averages":
             fig.add_trace(go.Scatter(x = df.index, y=df['HMA_21'], line_color ='purple', name = '21 HMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['HMA_55'], line_color ='blue', name = '55 HMA'), row =1, col = 1)
         elif indicator == "EMA Ribbons":
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_5'], line_color = 'yellow', name = '5 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'purple', name = '8 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
+        elif indicator == "MACD Moving Averages":
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'purple', name = '12 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_26'], line_color = 'blue', name = '26 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_100'], line_color = 'orange', name = '100 EMA'), row =1, col = 1)
         elif indicator == "200 EMA":
             fig.add_trace(go.Scatter(x=df.index, y=df['Close'].ewm(span=200, adjust=False).mean(), name='200EMA', line=dict(color='red', width=2)), row=1, col=1)
         elif indicator == '200 SMA':
@@ -677,7 +691,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

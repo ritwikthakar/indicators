@@ -255,6 +255,18 @@ rolling_std = df['Close'].rolling(window=20).std()
 df['upper_band'] = df['20SMA'] + (rolling_std * 2)
 df['lower_band'] = df['20SMA'] - (rolling_std * 2)
 
+# Calculate Williams Alligator indicator
+def calculate_alligator(df, jaw_length, teeth_length, lips_length):
+    df['jaw'] = df['Close'].rolling(window=jaw_length).mean().shift(jaw_length * -1)
+    df['teeth'] = df['Close'].rolling(window=teeth_length).mean().shift(teeth_length * -1)
+    df['lips'] = df['Close'].rolling(window=lips_length).mean().shift(lips_length * -1)
+    return df
+
+jaw_length = 13
+teeth_length = 8
+lips_length = 5
+data = calculate_alligator(df, jaw_length, teeth_length, lips_length)
+
 # Fractals
 def find_fractals(data):
     fractals = []
@@ -592,6 +604,10 @@ def create_plot(df, indicators):
         elif indicator == "Gann High Low":
             fig.add_trace(go.Scatter(x=df.index,y=df['HILOl_13_21'], mode='markers',marker=dict(color='green',symbol='star'),name='Gann High'))
             fig.add_trace(go.Scatter(x=df.index,y=df['HILOs_13_21'], mode='markers',marker=dict(color='red',symbol='star'),name='Gann Low'))
+        elif indicator == "Alligator":
+            go.Scatter(x=data.index, y=data['jaw'], mode='lines', name='Jaw', line=dict(color='red'))
+            go.Scatter(x=data.index, y=data['teeth'], mode='lines', name='Teeth', line=dict(color='green'))
+            go.Scatter(x=data.index, y=data['lips'], mode='lines', name='Lips', line=dict(color='blue'))
         elif indicator == "Fractals":
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
@@ -709,7 +725,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend']
 

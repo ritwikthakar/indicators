@@ -605,9 +605,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index,y=df['HILOl_13_21'], mode='markers',marker=dict(color='green',symbol='star'),name='Gann High'))
             fig.add_trace(go.Scatter(x=df.index,y=df['HILOs_13_21'], mode='markers',marker=dict(color='red',symbol='star'),name='Gann Low'))
         elif indicator == "Alligator":
-            go.Scatter(x=data.index, y=data['jaw'], mode='lines', name='Jaw', line=dict(color='red'))
-            go.Scatter(x=data.index, y=data['teeth'], mode='lines', name='Teeth', line=dict(color='green'))
-            go.Scatter(x=data.index, y=data['lips'], mode='lines', name='Lips', line=dict(color='blue'))
+            fig.add_trace(go.Scatter(x=data.index, y=data['jaw'], mode='lines', name='Jaw', line=dict(color='red')))
+            fig.add_trace(go.Scatter(x=data.index, y=data['teeth'], mode='lines', name='Teeth', line=dict(color='green')))
+            fig.add_trace(go.Scatter(x=data.index, y=data['lips'], mode='lines', name='Lips', line=dict(color='blue')))
         elif indicator == "Fractals":
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))

@@ -578,7 +578,7 @@ def create_plot(df, indicators):
         elif indicator == "MACD Moving Averages":
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'blue', name = '12 EMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_26'], line_color = 'orange', name = '26 EMA'), visible='legendonly', row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_26'], name = '26 EMA'line = dict(color='orange', width=2), visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['HMA_55'], line_color ='darkkhaki', name = '55 HMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], line_color = 'green', name = '50 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_100'], line_color = 'brown', name = '100 EMA'), row =1, col = 1)

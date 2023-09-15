@@ -649,8 +649,8 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index,y=df['upper_trend'], mode='lines',line=dict(color='red'),name='HT Up Trend'))
             fig.add_trace(go.Scatter(x=df.index,y=df['lower_trend'], mode='lines',line=dict(color='green'),name='HT Down Trend'))
             fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
-            fig.add_trace(go.Scatter(x=df[df['INC_1'] == 1].index,y=df[df['INC_1'] == 1]['High'],mode='markers',name='Swing Highs',marker=dict(color='green')))
-            fig.add_trace(go.Scatter(x=df[df['DEC_1'] == 1].index,y=df[df['DEC_1'] == 1]['Low'],mode='markers',name='Swing Lows',marker=dict(color='red')))
+            for date, price, marker_type in fractals:
+                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         elif indicator == "Swing High Swing Low":
             fig.add_trace(go.Scatter(x=df[df['INC_1'] == 1].index,y=df[df['INC_1'] == 1]['High'],mode='lines+markers',name='Swing Highs',marker=dict(color='green')))
             fig.add_trace(go.Scatter(x=df[df['DEC_1'] == 1].index,y=df[df['DEC_1'] == 1]['Low'],mode='lines+markers',name='Swing Lows',marker=dict(color='red')))

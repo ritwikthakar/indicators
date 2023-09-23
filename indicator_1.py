@@ -570,11 +570,11 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['HMA_21'], line_color ='purple', name = '21 HMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['HMA_55'], line_color ='blue', name = '55 HMA'), row =1, col = 1)
         elif indicator == "EMA Ribbons":
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_5'], name = '5 EMA', line = dict(color='darkgoldenrod', width=2), visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_5'], name = '5 EMA', line = dict(color='lightsalmon', width=2), visible='legendonly'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_8'], line_color = 'purple', name = '8 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], name = '50 EMA', line = dict(color='green', width=2), visible='legendonly'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], name = '50 EMA', line = dict(color='lightseagreen', width=2), visible='legendonly'), row =1, col = 1)
         elif indicator == "Mulit Moving Averages Strategy":
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'blue', name = '12 EMA'), row =1, col = 1)

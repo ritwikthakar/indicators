@@ -410,6 +410,17 @@ df.ta.kst(append=True)
 # RVGI
 df.ta.rvgi(append=True)
 
+# EMA Clouds
+ema_short = ta.ema(df["Close"], window=5)
+ema_long = ta.ema(df["Close"], window=20)
+
+# Create a DataFrame with EMAs
+ema_df = pd.DataFrame({
+    "Date": df.index,
+    "EMA_Short": ema_short,
+    "EMA_Long": ema_long
+})
+
 # Half Trend
 df.ta.hl2(append=True)
 df.ta.atr(append=True)
@@ -575,6 +586,10 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_13'], line_color = 'blue', name = '13 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], name = '50 EMA', line = dict(color='lightseagreen', width=2), visible='legendonly'), row =1, col = 1)
+        elif indicator == "EMA Clouds":
+            fig.add_scatter(x=ema_df["Date"], y=ema_df["EMA_Short"], mode='lines', name="EMA Short (5)")
+            fig.add_scatter(x=ema_df["Date"], y=ema_df["EMA_Long"], mode='lines', name="EMA Long (20)")
+            fig.add_area(x=ema_df["Date"], y0=ema_df["EMA_Short"], y1=ema_df["EMA_Long"], fillcolor="rgba(0,100,80,0.2)", name="EMA Cloud")
         elif indicator == "Mulit Moving Averages Strategy":
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'blue', name = '12 EMA'), row =1, col = 1)
@@ -732,7 +747,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Clouds", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler", "Swing High Swing Low" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", 'PSAR', 'Supertrend']
 

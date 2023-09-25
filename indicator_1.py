@@ -587,9 +587,8 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], name = '50 EMA', line = dict(color='lightseagreen', width=2), visible='legendonly'), row =1, col = 1)
         elif indicator == "EMA Clouds":
-            fig.add_scatter(x=ema_df["Date"], y=ema_df["EMA_Short"], mode='lines', name="EMA Short (5)")
-            fig.add_scatter(x=ema_df["Date"], y=ema_df["EMA_Long"], mode='lines', name="EMA Long (20)")
-            fig.add_trace(go.Scatter(x=df.index, y=ema_short, fill='tonexty', fillcolor='rgba(0,100,80,0.2)', mode='none', name="EMA Cloud"))
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_5'], line_color = 'green', name = '5 EMA'), row =1, col = 1)
+            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_20'], line_color = 'red', name = '20 EMA'), row =1, col = 1)
         elif indicator == "Mulit Moving Averages Strategy":
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'blue', name = '12 EMA'), row =1, col = 1)

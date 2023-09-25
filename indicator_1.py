@@ -598,7 +598,7 @@ def create_plot(df, indicators):
             for df in dfs:
                 fig.add_traces(go.Scatter(x=df.index, y = df['EMA_5],
                                           line = dict(color='rgba(0,0,0,0)')))
-                fig.add_traces(go.Scatter(x=df.index, y = df.['EMA_20],
+                fig.add_traces(go.Scatter(x=df.index, y = df['EMA_20],
                                           line = dict(color='rgba(0,0,0,0)'),
                                           fill='tonexty', 
                                           fillcolor = fillcol(df['label'].iloc[0])))

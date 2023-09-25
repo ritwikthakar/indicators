@@ -381,21 +381,11 @@ df.ta.ema(length=20, append=True)
 df.ta.ema(length=50, append=True)
 df.ta.ema(length=200, append=True)
 
-# EMA Clouds
-# split data into chunks where averages cross each other
-df['label'] = np.where(df['EMA_5']>df['EMA_20'], 1, 0)
-df['group'] = df['label'].ne(df['label'].shift()).cumsum()
-df = df.groupby('group')
-dfs = []
-for name, data in df:
-    dfs.append(data)
-
-# custom function to set fill color
-def fillcol(label):
-    if label >= 1:
-        return 'rgba(0,250,0,0.4)'
-    else:
-        return 'rgba(250,0,0,0.4)'
+# Determine the color of the cloud based on the condition
+# Calculate EMAs with different periods
+ema_short = df.ta.ema(length=5, append=True)
+ema_long = df.ta.ema(length=20, append=True)
+cloud_color = ['rgba(0,100,80,0.2)' if ema_short.iloc[i] > ema_long.iloc[i] else 'rgba(255,0,0,0.2)' for i in range(len(df))]
 
 # MACD Moving Averages
 df.ta.ema(length=12, append=True)
@@ -593,15 +583,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_21'], line_color = 'orange', name = '21 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_50'], name = '50 EMA', line = dict(color='lightseagreen', width=2), visible='legendonly'), row =1, col = 1)
         elif indicator == "EMA Clouds":
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_5'], line_color = 'green', name = '5 EMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x = df.index, y=df['EMA_20'], line_color = 'red', name = '20 EMA'), row =1, col = 1)
-            for df in dfs:
-                fig.add_traces(go.Scatter(x=df.index, y = df.EMA_5,
-                                          line = dict(color='rgba(0,0,0,0)')))
-                fig.add_traces(go.Scatter(x=df.index, y = df.EMA_20,
-                                          line = dict(color='rgba(0,0,0,0)'),
-                                          fill='tonexty', 
-                                          fillcolor = fillcol(df['label'].iloc[0])))
+            fig.add_trace(go.Scatter(x=df.index, y=ema_short, mode='lines', name="EMA Short (5)"))
+            fig.add_trace(go.Scatter(x=df.index, y=ema_long, mode='lines', name="EMA Long (20)"))
+            fig.add_trace(go.Scatter(x=df.index, y=ema_short, fill='tonexty', fillcolor=cloud_color, mode='none', name="EMA Cloud"))
         elif indicator == "Mulit Moving Averages Strategy":
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'blue', name = '12 EMA'), row =1, col = 1)

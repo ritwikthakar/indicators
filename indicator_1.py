@@ -377,6 +377,7 @@ df.ta.ema(length=5, append=True)
 df.ta.ema(length=8, append=True)
 df.ta.ema(length=13, append=True)
 df.ta.ema(length=21, append=True)
+df.ta.ema(length=20, append=True)
 df.ta.ema(length=50, append=True)
 df.ta.ema(length=200, append=True)
 
@@ -409,17 +410,6 @@ df.ta.kst(append=True)
 
 # RVGI
 df.ta.rvgi(append=True)
-
-# EMA Clouds
-ema_short = ta.ema(df["Close"], window=5)
-ema_long = ta.ema(df["Close"], window=20)
-
-# Create a DataFrame with EMAs
-ema_df = pd.DataFrame({
-    "Date": df.index,
-    "EMA_Short": ema_short,
-    "EMA_Long": ema_long
-})
 
 # Half Trend
 df.ta.hl2(append=True)

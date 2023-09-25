@@ -381,6 +381,22 @@ df.ta.ema(length=20, append=True)
 df.ta.ema(length=50, append=True)
 df.ta.ema(length=200, append=True)
 
+# EMA Clouds
+# split data into chunks where averages cross each other
+df['label'] = np.where(df['EMA_5']>df['EMA_20'], 1, 0)
+df['group'] = df['label'].ne(df['label'].shift()).cumsum()
+df = df.groupby('group')
+dfs = []
+for name, data in df:
+    dfs.append(data)
+
+# custom function to set fill color
+def fillcol(label):
+    if label >= 1:
+        return 'rgba(0,250,0,0.4)'
+    else:
+        return 'rgba(250,0,0,0.4)'
+
 # MACD Moving Averages
 df.ta.ema(length=12, append=True)
 df.ta.ema(length=26, append=True)
@@ -579,7 +595,13 @@ def create_plot(df, indicators):
         elif indicator == "EMA Clouds":
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_5'], line_color = 'green', name = '5 EMA'), row =1, col = 1)
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_20'], line_color = 'red', name = '20 EMA'), row =1, col = 1)
-            fig.add_trace(go.Scatter(x=df.index, y=df['EMA_5'], fill='tonexty', fillcolor='rgba(0,100,80,0.2)', mode='none', name="EMA Cloud"))
+            for df in dfs:
+                fig.add_traces(go.Scatter(x=df.index, y = df['EMA_5],
+                                          line = dict(color='rgba(0,0,0,0)')))
+                fig.add_traces(go.Scatter(x=df.index, y = df.['EMA_20],
+                                          line = dict(color='rgba(0,0,0,0)'),
+                                          fill='tonexty', 
+                                          fillcolor = fillcol(df['label'].iloc[0])))
         elif indicator == "Mulit Moving Averages Strategy":
             fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
             fig.add_trace(go.Scatter(x = df.index, y=df['EMA_12'], line_color = 'blue', name = '12 EMA'), row =1, col = 1)

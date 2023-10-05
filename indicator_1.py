@@ -17,7 +17,6 @@ import plotly.graph_objects as go
 import plotly.graph_objs as go_objs
 import plotly.subplots as sp
 from plotly.subplots import make_subplots
-import scipy.signal as signal
 
 df = pd.DataFrame()
 

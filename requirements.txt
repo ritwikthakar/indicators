@@ -6,4 +6,4 @@ plotly
 streamlit==1.16
 yfinance
 datetime
-
+scipy

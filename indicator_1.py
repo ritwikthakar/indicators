@@ -17,8 +17,6 @@ import plotly.graph_objects as go
 import plotly.graph_objs as go_objs
 import plotly.subplots as sp
 from plotly.subplots import make_subplots
-import scipy
-from scipy import signal
 
 df = pd.DataFrame()
 
@@ -490,6 +488,9 @@ def find_peaks(df, prominence=0.5):
 def find_troughs(df, prominence=0.5):
     troughs, _ = signal.find_peaks(-df, prominence=prominence)
     return troughs
+
+# Import signal from scipy
+from scipy import signal
 
 # Smooth the data for better peak/trough detection
 smoothed_close = signal.savgol_filter(df['Close'], window_length=5, polyorder=1)

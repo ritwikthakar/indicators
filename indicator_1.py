@@ -17,6 +17,7 @@ import plotly.graph_objects as go
 import plotly.graph_objs as go_objs
 import plotly.subplots as sp
 from plotly.subplots import make_subplots
+from scipy import signal
 
 df = pd.DataFrame()
 
@@ -480,8 +481,21 @@ def find_engulfing_candles(prices):
 engulfing_candles = find_engulfing_candles(df)
 
 # Swing High & Swing Low
-df.ta.increasing(append=True)
-df.ta.decreasing(append=True)
+# Find local peaks (resistance) and troughs (support)
+def find_peaks(df, prominence=0.5):
+    peaks, _ = signal.find_peaks(df, prominence=prominence)
+    return peaks
+
+def find_troughs(df, prominence=0.5):
+    troughs, _ = signal.find_peaks(-df, prominence=prominence)
+    return troughs
+
+# Smooth the data for better peak/trough detection
+smoothed_close = signal.savgol_filter(df['Close'], window_length=5, polyorder=1)
+
+# Find peaks (resistance) and troughs (support)
+resistance_indices = find_peaks(smoothed_close)
+support_indices = find_troughs(smoothed_close)
 
 # RSI
 df.ta.rsi(append=True)
@@ -656,8 +670,8 @@ def create_plot(df, indicators):
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         elif indicator == "Swing High Swing Low":
-            fig.add_trace(go.Scatter(x=df[df['INC_1'] == 1].index,y=df[df['INC_1'] == 1]['High'],mode='lines+markers',name='Swing Highs',marker=dict(color='green')))
-            fig.add_trace(go.Scatter(x=df[df['DEC_1'] == 1].index,y=df[df['DEC_1'] == 1]['Low'],mode='lines+markers',name='Swing Lows',marker=dict(color='red')))
+            fig.add_trace(go.Scatter(x=df.index[resistance_indices],y=df['High'][resistance_indices],mode='markers',marker=dict(color='red', symbol='triangle-up', size=10),name='Resistance Levels'))
+            fig.add_trace(go.Scatter(x=df.index[support_indices],y=df['Low'][support_indices],mode='markers',marker=dict(color='green', symbol='triangle-down', size=10),name='Support Levels'))
         elif indicator == "Engulfing Candles":
             bullish_engulfing_dates = engulfing_candles[engulfing_candles['Bullish']].index
             fig.add_trace(go.Scatter(x=bullish_engulfing_dates, y=df.loc[bullish_engulfing_dates, 'Low'], mode='markers', name='Bullish Engulfing', marker=dict(color='green', size=10)))

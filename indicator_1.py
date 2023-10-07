@@ -13,6 +13,7 @@ import pandas as pd
 import pandas_ta as ta
 import streamlit as st
 import yfinance as yf
+from scipy.signal import argrelextrema
 import plotly.graph_objects as go
 import plotly.graph_objs as go_objs
 import plotly.subplots as sp
@@ -413,24 +414,24 @@ df.ta.rvgi(append=True)
 
 # Swing High Swing Low
 
-# # Find local peaks (resistance) and troughs (support)
-# def find_peaks(df, prominence=0.5):
-#     peaks, _ = signal.find_peaks(df, prominence=prominence)
-#     return peaks
+# Find local peaks (resistance) and troughs (support)
+def find_peaks(df, prominence=0.5):
+    peaks, _ = signal.find_peaks(df, prominence=prominence)
+    return peaks
 
-# def find_troughs(df, prominence=0.5):
-#     troughs, _ = signal.find_peaks(-df, prominence=prominence)
-#     return troughs
+def find_troughs(df, prominence=0.5):
+    troughs, _ = signal.find_peaks(-df, prominence=prominence)
+    return troughs
 
-# # Import signal from scipy
-# from scipy import signal
+# Import signal from scipy
+from scipy import signal
 
-# # Smooth the data for better peak/trough detection
-# smoothed_close = signal.savgol_filter(df['Close'], window_length=5, polyorder=1)
+# Smooth the data for better peak/trough detection
+smoothed_close = signal.savgol_filter(df['Close'], window_length=5, polyorder=1)
 
-# # Find peaks (resistance) and troughs (support)
-# resistance_indices = find_peaks(smoothed_close)
-# support_indices = find_troughs(smoothed_close)
+# Find peaks (resistance) and troughs (support)
+resistance_indices = find_peaks(smoothed_close)
+support_indices = find_troughs(smoothed_close)
 
 # Half Trend
 df.ta.hl2(append=True)
@@ -673,9 +674,9 @@ def create_plot(df, indicators):
             fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
-        # elif indicator == "Swing High Swing Low":
-        #     fig.add_trace(go.Scatter(x=df.index[resistance_indices],y=df['High'][resistance_indices],mode='markers',marker=dict(color='red', symbol='triangle-up', size=10),name='Resistance Levels'))
-        #     fig.add_trace(go.Scatter(x=df.index[support_indices],y=df['Low'][support_indices],mode='markers',marker=dict(color='green', symbol='triangle-down', size=10),name='Support Levels'))
+        elif indicator == "Swing High Swing Low":
+            fig.add_trace(go.Scatter(x=df.index[resistance_indices],y=df['High'][resistance_indices],mode='markers',marker=dict(color='red', symbol='triangle-up', size=10),name='Resistance Levels'))
+            fig.add_trace(go.Scatter(x=df.index[support_indices],y=df['Low'][support_indices],mode='markers',marker=dict(color='green', symbol='triangle-down', size=10),name='Support Levels'))
         elif indicator == "Engulfing Candles":
             bullish_engulfing_dates = engulfing_candles[engulfing_candles['Bullish']].index
             fig.add_trace(go.Scatter(x=bullish_engulfing_dates, y=df.loc[bullish_engulfing_dates, 'Low'], mode='markers', name='Bullish Engulfing', marker=dict(color='green', size=10)))
@@ -754,7 +755,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", 'PSAR', "EMA Crossover"]
 

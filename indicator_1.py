@@ -478,6 +478,11 @@ df['decycler_n'] = df['decycler_signal_sell'] * df['decycler']
 df['decycler_p'].replace(0.000000, np.nan, inplace=True)
 df['decycler_n'].replace(0.000000, np.nan, inplace=True)
 
+# Fair Value Gaps
+
+fair_value = df['Close'].mean()
+df['FairValueGap'] = data['Close'] - fair_value
+
 # Engulfing Candles
 def find_engulfing_candles(prices):
     # Compute the candle body size for each candle
@@ -648,6 +653,8 @@ def create_plot(df, indicators):
             add_fibonacci_retracement( fig, low_price, high_price, start, end)
         elif indicator == "Fibonacci Extensions":
             add_fibonacci_extension( fig, low_price, high_price, start, end)
+        elif indicator == "FVG":
+            fig.add_trace(go.Scatter(x=df.index, y=df['FairValueGap'], mode='markers', name='Fair Value Gap'))
         elif indicator == "TD Sequential":
             fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['Close'], mode='markers', name='Buy Signal', marker=dict(color='green', size=8)))
             fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['Close'], mode='markers', name='Sell Signal', marker=dict(color='red', size=8)))
@@ -755,7 +762,7 @@ def create_plot(df, indicators):
     st.plotly_chart(fig)
 
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
 default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", 'PSAR', "EMA Crossover", "Swing High Swing Low"]
 

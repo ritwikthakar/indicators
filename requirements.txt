@@ -3,6 +3,6 @@ pandas
 pandas_ta
 plotly
 streamlit==1.16
-yfinance
+yfinance==0.2.40
 datetime
 scipy

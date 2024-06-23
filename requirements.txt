@@ -1,6 +1,7 @@
 numpy
 pandas
-pandas_ta
+pandas_datareader==0.9.0
+pandas_ta==0.3.14b0
 plotly
 streamlit==1.16
 yfinance==0.2.40

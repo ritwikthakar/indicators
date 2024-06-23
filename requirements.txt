@@ -1,6 +1,5 @@
 numpy
 pandas
-pandas_datareader
 pandas_ta
 plotly
 streamlit==1.16

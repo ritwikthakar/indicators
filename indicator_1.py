@@ -55,20 +55,20 @@ df2 = df.copy()
 df3 = df.copy()
 df4 = df.copy()
 
-# Compute RSI divergence
-def compute_rsi_divergence(data, window):
-    high = df["High"].rolling(window).max()
-    low = df["Low"].rolling(window).min()
-    rsi = df["RSI"]
-    divergence = (rsi - rsi.shift(window)) / (high - low)
-    return divergence
+# # Compute RSI divergence
+# def compute_rsi_divergence(data, window):
+#     high = df["High"].rolling(window).max()
+#     low = df["Low"].rolling(window).min()
+#     rsi = df["RSI"]
+#     divergence = (rsi - rsi.shift(window)) / (high - low)
+#     return divergence
 
-rsi_divergence_window = 10
-df["RSI_Divergence"] = compute_rsi_divergence(df, rsi_divergence_window)
+# rsi_divergence_window = 10
+# df["RSI_Divergence"] = compute_rsi_divergence(df, rsi_divergence_window)
 
-# Compute buy and sell signals
-buy_signal = (df["RSI_Divergence"] > 0) & (df["RSI_Divergence"].shift(1) < 0)
-sell_signal = (df["RSI_Divergence"] < 0) & (df["RSI_Divergence"].shift(1) > 0)
+# # Compute buy and sell signals
+# buy_signal = (df["RSI_Divergence"] > 0) & (df["RSI_Divergence"].shift(1) < 0)
+# sell_signal = (df["RSI_Divergence"] < 0) & (df["RSI_Divergence"].shift(1) > 0)
 
 # Calculate the MACD
 df['12EMA'] = df['Close'].ewm(span=12).mean()
@@ -524,11 +524,11 @@ def create_plot(df, indicators):
             fig.add_trace(go.Candlestick(x=df.index, open=df["HA_Open"], high=df["HA_High"], low=df["HA_Low"], close=df["HA_Close"], name="Price"), row=1, col=1)
         elif indicator == 'RSI':
             fig.add_trace(go.Scatter(x=df.index, y=df["RSI_14"], name="RSI"), row=2, col=1)
-        elif indicator == 'RSI Divergence':
-            fig.add_trace(go.Scatter(x=df.index, y=df["RSI"], name="RSI"), row=2, col=1)
-            fig.add_trace(go.Scatter(x=df.index[buy_signal], y=df["RSI"][buy_signal], mode="markers", marker=dict(symbol="triangle-up", size=10, color="green"), name="Buy"), row=2, col=1)
-            fig.add_trace(go.Scatter(x=df.index[sell_signal], y=df["RSI"][sell_signal], mode="markers", marker=dict(symbol="triangle-down", size=10, color="red"), name="Sell"), row=2, col=1)
-            fig.add_trace(go.Scatter(x=df.index, y=df['20RSI'], name='Mean RSI', line=dict(color='Orange', width=2)), row = 2, col = 1)
+        # elif indicator == 'RSI Divergence':
+        #     fig.add_trace(go.Scatter(x=df.index, y=df["RSI"], name="RSI"), row=2, col=1)
+        #     fig.add_trace(go.Scatter(x=df.index[buy_signal], y=df["RSI"][buy_signal], mode="markers", marker=dict(symbol="triangle-up", size=10, color="green"), name="Buy"), row=2, col=1)
+        #     fig.add_trace(go.Scatter(x=df.index[sell_signal], y=df["RSI"][sell_signal], mode="markers", marker=dict(symbol="triangle-down", size=10, color="red"), name="Sell"), row=2, col=1)
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['20RSI'], name='Mean RSI', line=dict(color='Orange', width=2)), row = 2, col = 1)
         elif indicator == 'MACD':
             fig.add_trace(go.Scatter(x=df.index, y=df['MACD'], name='MACD', line=dict(color='blue', width=2)), row = 3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['Signal Line'], name='Signal', line=dict(color='red', width=2)), row = 3, col = 1)
@@ -771,7 +771,7 @@ quarterly_cashflow_statement = symbol.quarterly_cash_flow
 tab1, tab2 = st.tabs(['Technical Analysis' , "Fundamental Analysis"])
 
 with tab1:
-    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' , 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
     default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", 'PSAR', "EMA Crossover", "Swing High Swing Low"]
     selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
     st.header("Technical Analysis")

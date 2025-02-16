@@ -268,33 +268,33 @@ df['adx'] = df['dx'].ewm(span=n, adjust=False).mean()
 # lips_length = 5
 # data = calculate_alligator(df, jaw_length, teeth_length, lips_length)
 
-# Fractals
-def find_fractals(data):
-    fractals = []
-    for i in range(5, len(df) - 5):
-        if df['High'][i] > df['High'][i-1] and df['High'][i] > df['High'][i+1] and \
-           df['High'][i] > df['High'][i-2] and df['High'][i] > df['High'][i+2]:
-            fractals.append((df.index[i], df['High'][i], 'peak'))
-        elif df['Low'][i] < df['Low'][i-1] and df['Low'][i] < df['Low'][i+1] and \
-             df['Low'][i] < df['Low'][i-2] and df['Low'][i] < df['Low'][i+2]:
-            fractals.append((df.index[i], df['Low'][i], 'trough'))
-    return fractals
+# # Fractals
+# def find_fractals(data):
+#     fractals = []
+#     for i in range(5, len(df) - 5):
+#         if df['High'][i] > df['High'][i-1] and df['High'][i] > df['High'][i+1] and \
+#            df['High'][i] > df['High'][i-2] and df['High'][i] > df['High'][i+2]:
+#             fractals.append((df.index[i], df['High'][i], 'peak'))
+#         elif df['Low'][i] < df['Low'][i-1] and df['Low'][i] < df['Low'][i+1] and \
+#              df['Low'][i] < df['Low'][i-2] and df['Low'][i] < df['Low'][i+2]:
+#             fractals.append((df.index[i], df['Low'][i], 'trough'))
+#     return fractals
 
-fractals = find_fractals(df)
+# fractals = find_fractals(df)
 
-# 9 Period Fractals
-def find_fractals_9(data):
-    fractals9 = []
-    for i in range(9, len(df) - 9):
-        if df['High'][i] > df['High'][i-1] and df['High'][i] > df['High'][i+1] and \
-           df['High'][i] > df['High'][i-2] and df['High'][i] > df['High'][i+2]:
-            fractals9.append((df.index[i], df['High'][i], 'peak'))
-        elif df['Low'][i] < df['Low'][i-1] and df['Low'][i] < df['Low'][i+1] and \
-             df['Low'][i] < df['Low'][i-2] and df['Low'][i] < df['Low'][i+2]:
-            fractals9.append((df.index[i], df['Low'][i], 'trough'))
-    return fractals9
+# # 9 Period Fractals
+# def find_fractals_9(data):
+#     fractals9 = []
+#     for i in range(9, len(df) - 9):
+#         if df['High'][i] > df['High'][i-1] and df['High'][i] > df['High'][i+1] and \
+#            df['High'][i] > df['High'][i-2] and df['High'][i] > df['High'][i+2]:
+#             fractals9.append((df.index[i], df['High'][i], 'peak'))
+#         elif df['Low'][i] < df['Low'][i-1] and df['Low'][i] < df['Low'][i+1] and \
+#              df['Low'][i] < df['Low'][i-2] and df['Low'][i] < df['Low'][i+2]:
+#             fractals9.append((df.index[i], df['Low'][i], 'trough'))
+#     return fractals9
 
-fractals9 = find_fractals_9(df)
+# fractals9 = find_fractals_9(df)
 
 
 # # Function to add Fibonacci retracement lines
@@ -414,14 +414,14 @@ df.ta.rvgi(append=True)
 
 # Swing High Swing Low
 
-# Find local peaks (resistance) and troughs (support)
-def find_peaks(df, prominence=0.5):
-    peaks, _ = signal.find_peaks(df, prominence=prominence)
-    return peaks
+# # Find local peaks (resistance) and troughs (support)
+# def find_peaks(df, prominence=0.5):
+#     peaks, _ = signal.find_peaks(df, prominence=prominence)
+#     return peaks
 
-def find_troughs(df, prominence=0.5):
-    troughs, _ = signal.find_peaks(-df, prominence=prominence)
-    return troughs
+# def find_troughs(df, prominence=0.5):
+#     troughs, _ = signal.find_peaks(-df, prominence=prominence)
+#     return troughs
 
 # Import signal from scipy
 from scipy import signal
@@ -433,78 +433,78 @@ smoothed_close = signal.savgol_filter(df['Close'], window_length=5, polyorder=1)
 resistance_indices = find_peaks(smoothed_close)
 support_indices = find_troughs(smoothed_close)
 
-# Half Trend
-df.ta.hl2(append=True)
-df.ta.atr(append=True)
-atr_multiplier = 2
-df['upper_trend'] = df['HL2'] - atr_multiplier * df['ATRr_14']
-df['lower_trend'] = df['HL2'] + atr_multiplier * df['ATRr_14']
-df['half_trend'] = df['Adj Close'].where(df['Adj Close'] > df['upper_trend'], df['lower_trend'])
-buy_ht = (df["half_trend"] > df['Close'].shift(1)) & (df["half_trend"] < df['Close'])
-sell_ht = (df["half_trend"] < df['Close'].shift(1)) & (df["half_trend"] > df['Close'])
+# # Half Trend
+# df.ta.hl2(append=True)
+# df.ta.atr(append=True)
+# atr_multiplier = 2
+# df['upper_trend'] = df['HL2'] - atr_multiplier * df['ATRr_14']
+# df['lower_trend'] = df['HL2'] + atr_multiplier * df['ATRr_14']
+# df['half_trend'] = df['Adj Close'].where(df['Adj Close'] > df['upper_trend'], df['lower_trend'])
+# buy_ht = (df["half_trend"] > df['Close'].shift(1)) & (df["half_trend"] < df['Close'])
+# sell_ht = (df["half_trend"] < df['Close'].shift(1)) & (df["half_trend"] > df['Close'])
 
-# Elher's Decycler
+# # Elher's Decycler
 
-def decycler(data, hp_length):
-    """Python implementation of Simple Decycler indicator created by John Ehlers
-    :param data: list of price data
-    :type data: list
-    :param hp_length: High Pass filter length
-    :type hp_length: int
-    :return: Decycler applied price data
-    :rtype: list
-    """
-    hpf = []
+# def decycler(data, hp_length):
+#     """Python implementation of Simple Decycler indicator created by John Ehlers
+#     :param data: list of price data
+#     :type data: list
+#     :param hp_length: High Pass filter length
+#     :type hp_length: int
+#     :return: Decycler applied price data
+#     :rtype: list
+#     """
+#     hpf = []
 
-    for i, _ in enumerate(data):
-        if i < 2:
-            hpf.append(0)
-        else:
-            alpha_arg = 2 * 3.14159 / (hp_length * 1.414)
-            alpha1 = (math.cos(alpha_arg) + math.sin(alpha_arg) - 1) / math.cos(alpha_arg)
-            hpf.append(math.pow(1.0-alpha1/2.0, 2)*(data[i]-2*data[i-1]+data[i-2]) + 2*(1-alpha1)*hpf[i-1] - math.pow(1-alpha1, 2)*hpf[i-2])
+#     for i, _ in enumerate(data):
+#         if i < 2:
+#             hpf.append(0)
+#         else:
+#             alpha_arg = 2 * 3.14159 / (hp_length * 1.414)
+#             alpha1 = (math.cos(alpha_arg) + math.sin(alpha_arg) - 1) / math.cos(alpha_arg)
+#             hpf.append(math.pow(1.0-alpha1/2.0, 2)*(data[i]-2*data[i-1]+data[i-2]) + 2*(1-alpha1)*hpf[i-1] - math.pow(1-alpha1, 2)*hpf[i-2])
 
-    dec = []
-    for i, _ in enumerate(data):
-        dec.append(data[i] - hpf[i])
+#     dec = []
+#     for i, _ in enumerate(data):
+#         dec.append(data[i] - hpf[i])
 
-    return dec
+#     return dec
 
-df['decycler'] = decycler(df['Adj Close'], 20)
-df['decycler_signal_buy'] = np.where(df["decycler"]<df['Adj Close'], 1, 0)
-df['decycler_p'] = df['decycler_signal_buy'] * df['decycler']
-df['decycler_signal_sell'] = np.where(df["decycler"]>df['Adj Close'], 1, 0)
-df['decycler_n'] = df['decycler_signal_sell'] * df['decycler']
-df['decycler_p'].replace(0.000000, np.nan, inplace=True)
-df['decycler_n'].replace(0.000000, np.nan, inplace=True)
+# df['decycler'] = decycler(df['Adj Close'], 20)
+# df['decycler_signal_buy'] = np.where(df["decycler"]<df['Adj Close'], 1, 0)
+# df['decycler_p'] = df['decycler_signal_buy'] * df['decycler']
+# df['decycler_signal_sell'] = np.where(df["decycler"]>df['Adj Close'], 1, 0)
+# df['decycler_n'] = df['decycler_signal_sell'] * df['decycler']
+# df['decycler_p'].replace(0.000000, np.nan, inplace=True)
+# df['decycler_n'].replace(0.000000, np.nan, inplace=True)
 
-# Fair Value Gaps
+# # Fair Value Gaps
 
-fair_value = df['Close'].mean()
-df['FairValueGap'] = data['Close'] - fair_value
+# fair_value = df['Close'].mean()
+# df['FairValueGap'] = data['Close'] - fair_value
 
-# Engulfing Candles
-def find_engulfing_candles(prices):
-    # Compute the candle body size for each candle
-    prices['BodySize'] = abs(prices['Open'] - prices['Close'])
+# # Engulfing Candles
+# def find_engulfing_candles(prices):
+#     # Compute the candle body size for each candle
+#     prices['BodySize'] = abs(prices['Open'] - prices['Close'])
     
-    # Check for bullish engulfing patterns
-    bullish_engulfing = (prices['Open'] > prices['Close'].shift(1)) & \
-                        (prices['Close'] < prices['Open'].shift(1)) & \
-                        (prices['BodySize'] > prices['BodySize'].shift(1))
+#     # Check for bullish engulfing patterns
+#     bullish_engulfing = (prices['Open'] > prices['Close'].shift(1)) & \
+#                         (prices['Close'] < prices['Open'].shift(1)) & \
+#                         (prices['BodySize'] > prices['BodySize'].shift(1))
     
-    # Check for bearish engulfing patterns
-    bearish_engulfing = (prices['Open'] < prices['Close'].shift(1)) & \
-                        (prices['Close'] > prices['Open'].shift(1)) & \
-                        (prices['BodySize'] > prices['BodySize'].shift(1))
+#     # Check for bearish engulfing patterns
+#     bearish_engulfing = (prices['Open'] < prices['Close'].shift(1)) & \
+#                         (prices['Close'] > prices['Open'].shift(1)) & \
+#                         (prices['BodySize'] > prices['BodySize'].shift(1))
     
-    # Create a new DataFrame to store engulfing candles
-    engulfing_candles = pd.DataFrame(index=prices.index)
-    engulfing_candles['Bullish'] = bullish_engulfing
-    engulfing_candles['Bearish'] = bearish_engulfing
+#     # Create a new DataFrame to store engulfing candles
+#     engulfing_candles = pd.DataFrame(index=prices.index)
+#     engulfing_candles['Bullish'] = bullish_engulfing
+#     engulfing_candles['Bearish'] = bearish_engulfing
     
-    return engulfing_candles
-engulfing_candles = find_engulfing_candles(df)
+#     return engulfing_candles
+# engulfing_candles = find_engulfing_candles(df)
 
 
 # RSI
@@ -643,18 +643,18 @@ def create_plot(df, indicators):
         #     fig.add_trace(go.Scatter(x=data.index, y=data['jaw'], mode='lines', name='Jaw', line=dict(color='red')))
         #     fig.add_trace(go.Scatter(x=data.index, y=data['teeth'], mode='lines', name='Teeth', line=dict(color='green')))
         #     fig.add_trace(go.Scatter(x=data.index, y=data['lips'], mode='lines', name='Lips', line=dict(color='blue')))
-        elif indicator == "Fractals":
-            for date, price, marker_type in fractals:
-                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
-        elif indicator == "9 Period Fractals":
-            for date, price, marker_type in fractals9:
-                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        # elif indicator == "Fractals":
+        #     for date, price, marker_type in fractals:
+        #         fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        # elif indicator == "9 Period Fractals":
+        #     for date, price, marker_type in fractals9:
+        #         fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         # elif indicator == "Fibonacci Retracements":
         #     add_fibonacci_retracement( fig, low_price, high_price, start, end)
         # elif indicator == "Fibonacci Extensions":
         #     add_fibonacci_extension( fig, low_price, high_price, start, end)
-        elif indicator == "FVG":
-            fig.add_trace(go.Scatter(x=df.index, y=df['FairValueGap'], mode='markers', name='Fair Value Gap'))
+        # elif indicator == "FVG":
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['FairValueGap'], mode='markers', name='Fair Value Gap'))
         elif indicator == "TD Sequential":
             fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['Close'], mode='markers', name='Buy Signal', marker=dict(color='green', size=8)))
             fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['Close'], mode='markers', name='Sell Signal', marker=dict(color='red', size=8)))
@@ -672,24 +672,24 @@ def create_plot(df, indicators):
         elif indicator == "Relative Vigor Index":
             fig.add_trace(go.Scatter(x=df.index, y=df['RVGI_14_4'], name='RVGI', line=dict(color='green', width=2)), row = 3, col = 1)
             fig.add_trace(go.Scatter(x=df.index, y=df['RVGIs_14_4'], name='RVGI Signal', line=dict(color='red', width=2)), row = 3, col = 1)
-        elif indicator == "Decycler":
-            fig.add_trace(go.Scatter(x=df.index, y=df['decycler_p'], name='Decycler Bull', line = dict(color='green', width=2)))
-            fig.add_trace(go.Scatter(x=df.index, y=df['decycler_n'], name='Decycler Bear',line = dict(color='red', width=2)))
-        elif indicator == "Half Trend":
-            fig.add_trace(go.Scatter(x=df.index,y=df['upper_trend'], mode='lines',line=dict(color='red'),name='HT Up Trend'))
-            fig.add_trace(go.Scatter(x=df.index,y=df['lower_trend'], mode='lines',line=dict(color='green'),name='HT Down Trend'))
-            fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
-            for date, price, marker_type in fractals:
-                fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
-        elif indicator == "Swing High Swing Low":
-            fig.add_trace(go.Scatter(x=df.index[resistance_indices],y=df['High'][resistance_indices],mode='markers',marker=dict(color='red', symbol='triangle-up', size=10),name='Resistance Levels'))
-            fig.add_trace(go.Scatter(x=df.index[support_indices],y=df['Low'][support_indices],mode='markers',marker=dict(color='green', symbol='triangle-down', size=10),name='Support Levels'))
-        elif indicator == "Engulfing Candles":
-            bullish_engulfing_dates = engulfing_candles[engulfing_candles['Bullish']].index
-            fig.add_trace(go.Scatter(x=bullish_engulfing_dates, y=df.loc[bullish_engulfing_dates, 'Low'], mode='markers', name='Bullish Engulfing', marker=dict(color='green', size=10)))
-            # Add bearish engulfing candles
-            bearish_engulfing_dates = engulfing_candles[engulfing_candles['Bearish']].index
-            fig.add_trace(go.Scatter(x=bearish_engulfing_dates, y=df.loc[bearish_engulfing_dates, 'High'], mode='markers', name='Bearish Engulfing', marker=dict(color='red', size=10)))
+        # elif indicator == "Decycler":
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['decycler_p'], name='Decycler Bull', line = dict(color='green', width=2)))
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['decycler_n'], name='Decycler Bear',line = dict(color='red', width=2)))
+        # elif indicator == "Half Trend":
+        #     fig.add_trace(go.Scatter(x=df.index,y=df['upper_trend'], mode='lines',line=dict(color='red'),name='HT Up Trend'))
+        #     fig.add_trace(go.Scatter(x=df.index,y=df['lower_trend'], mode='lines',line=dict(color='green'),name='HT Down Trend'))
+        #     fig.add_trace(go.Scatter(x=df.index,y=df['half_trend'], mode='lines',line=dict(color='blue'),name='Half Trend'))
+        #     for date, price, marker_type in fractals:
+        #         fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
+        # elif indicator == "Swing High Swing Low":
+        #     fig.add_trace(go.Scatter(x=df.index[resistance_indices],y=df['High'][resistance_indices],mode='markers',marker=dict(color='red', symbol='triangle-up', size=10),name='Resistance Levels'))
+        #     fig.add_trace(go.Scatter(x=df.index[support_indices],y=df['Low'][support_indices],mode='markers',marker=dict(color='green', symbol='triangle-down', size=10),name='Support Levels'))
+        # elif indicator == "Engulfing Candles":
+        #     bullish_engulfing_dates = engulfing_candles[engulfing_candles['Bullish']].index
+        #     fig.add_trace(go.Scatter(x=bullish_engulfing_dates, y=df.loc[bullish_engulfing_dates, 'Low'], mode='markers', name='Bullish Engulfing', marker=dict(color='green', size=10)))
+        #     # Add bearish engulfing candles
+        #     bearish_engulfing_dates = engulfing_candles[engulfing_candles['Bearish']].index
+        #     fig.add_trace(go.Scatter(x=bearish_engulfing_dates, y=df.loc[bearish_engulfing_dates, 'High'], mode='markers', name='Bearish Engulfing', marker=dict(color='red', size=10)))
         elif indicator == "Doji Candles":
             fig.add_trace(go.Scatter(x=df.index, y=dfc['CDL_DOJI_10_0.1'], mode="markers", marker=dict(size=10, color="red"), name="Doji"), row = 2, col = 1)
         elif indicator == "Dragonfly Doji Candles":
@@ -771,7 +771,7 @@ quarterly_cashflow_statement = symbol.quarterly_cash_flow
 tab1, tab2 = st.tabs(['Technical Analysis' , "Fundamental Analysis"])
 
 with tab1:
-    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' , 'MACD', 'ATR', 'ADX', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "9 Period Fractals" , "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' , 'MACD', 'ATR', 'ADX', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" , "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
     default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", "EMA Crossover", "Swing High Swing Low"]
     selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
     st.header("Technical Analysis")

@@ -9,6 +9,7 @@ from datetime import timedelta
 import datetime as dt
 import math
 import numpy as np
+NaN = np.nan
 import pandas as pd
 import pandas_ta as ta
 import streamlit as st

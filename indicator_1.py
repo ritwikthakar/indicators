@@ -4,7 +4,7 @@ Created on Tue Jun 27 20:48:27 2023
 
 @author: ritwi
 """
-
+pip install --upgrade pandas_ta numpy
 from datetime import timedelta
 import datetime as dt
 import math

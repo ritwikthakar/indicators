@@ -761,12 +761,24 @@ def create_plot(df, indicators):
     fig.update_layout(layout)
     st.plotly_chart(fig)
 
-indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
 
-default_options = ['Candlestick Chart', 'RSI', 'MACD', 'ATR', "M Stochastic", "200 EMA", 'PSAR', "EMA Crossover", "Swing High Swing Low"]
+symbol = yf.Ticker(ticker)
+quarterly_income_statement = symbol.quarterly_income_stmt
+quarterly_balance_sheet = symbol.quarterly_balance_sheet
+quarterly_cashflow_statement = symbol.quarterly_cash_flow
 
 
-selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
+tab1, tab2 = st.tabs(['Technical Analysis' , "Fundamental Analysis"])
 
+with tab1:
+    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' ,'RSI Divergence', 'MACD', 'ATR', 'ADX', 'PSAR', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+    default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", 'PSAR', "EMA Crossover", "Swing High Swing Low"]
+    selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
+    st.header("Technical Analysis")
+    create_plot(df, selected_indicators)
 
-create_plot(df, selected_indicators)
+with tab2:
+    st.header("Fundamental Analysis")
+    #statement = [quarterly_income_statement,quarterly_balance_sheet,quarterly_cashflow_statement]
+    #selected_statements = st.selectbox("Select Financial Statement", quarterly_income_statement,quarterly_balance_sheet,quarterly_cashflow_statement)
+    st.dataframe(symbol.quarterly_cashflow)

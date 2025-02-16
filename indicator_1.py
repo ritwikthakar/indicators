@@ -169,104 +169,104 @@ df['adx'] = df['dx'].ewm(span=n, adjust=False).mean()
 
 # Supertrend
 
-def Supertrend(df, atr_period, multiplier):
+# def Supertrend(df, atr_period, multiplier):
     
-    high = df['High']
-    low = df['Low']
-    close = df['Close']
+#     high = df['High']
+#     low = df['Low']
+#     close = df['Close']
     
-    # calculate ATR
-    price_diffs = [high - low, 
-                   high - close.shift(), 
-                   close.shift() - low]
-    true_range = pd.concat(price_diffs, axis=1)
-    true_range = true_range.abs().max(axis=1)
-    # default ATR calculation in supertrend indicator
-    atr = true_range.ewm(alpha=1/atr_period,min_periods=atr_period).mean() 
-    # df['atr'] = df['tr'].rolling(atr_period).mean()
+#     # calculate ATR
+#     price_diffs = [high - low, 
+#                    high - close.shift(), 
+#                    close.shift() - low]
+#     true_range = pd.concat(price_diffs, axis=1)
+#     true_range = true_range.abs().max(axis=1)
+#     # default ATR calculation in supertrend indicator
+#     atr = true_range.ewm(alpha=1/atr_period,min_periods=atr_period).mean() 
+#     # df['atr'] = df['tr'].rolling(atr_period).mean()
     
-    # HL2 is simply the average of high and low prices
-    hl2 = (high + low) / 2
-    # upperband and lowerband calculation
-    # notice that final bands are set to be equal to the respective bands
-    final_upperband = upperband = hl2 + (multiplier * atr)
-    final_lowerband = lowerband = hl2 - (multiplier * atr)
+#     # HL2 is simply the average of high and low prices
+#     hl2 = (high + low) / 2
+#     # upperband and lowerband calculation
+#     # notice that final bands are set to be equal to the respective bands
+#     final_upperband = upperband = hl2 + (multiplier * atr)
+#     final_lowerband = lowerband = hl2 - (multiplier * atr)
     
-    # initialize Supertrend column to True
-    supertrend = [True] * len(df)
+#     # initialize Supertrend column to True
+#     supertrend = [True] * len(df)
     
-    for i in range(1, len(df.index)):
-        curr, prev = i, i-1
+#     for i in range(1, len(df.index)):
+#         curr, prev = i, i-1
         
-        # if current close price crosses above upperband
-        if close[curr] > final_upperband[prev]:
-            supertrend[curr] = True
-        # if current close price crosses below lowerband
-        elif close[curr] < final_lowerband[prev]:
-            supertrend[curr] = False
-        # else, the trend continues
-        else:
-            supertrend[curr] = supertrend[prev]
+#         # if current close price crosses above upperband
+#         if close[curr] > final_upperband[prev]:
+#             supertrend[curr] = True
+#         # if current close price crosses below lowerband
+#         elif close[curr] < final_lowerband[prev]:
+#             supertrend[curr] = False
+#         # else, the trend continues
+#         else:
+#             supertrend[curr] = supertrend[prev]
             
-            # adjustment to the final bands
-            if supertrend[curr] == True and final_lowerband[curr] < final_lowerband[prev]:
-                final_lowerband[curr] = final_lowerband[prev]
-            if supertrend[curr] == False and final_upperband[curr] > final_upperband[prev]:
-                final_upperband[curr] = final_upperband[prev]
+#             # adjustment to the final bands
+#             if supertrend[curr] == True and final_lowerband[curr] < final_lowerband[prev]:
+#                 final_lowerband[curr] = final_lowerband[prev]
+#             if supertrend[curr] == False and final_upperband[curr] > final_upperband[prev]:
+#                 final_upperband[curr] = final_upperband[prev]
 
-        # to remove bands according to the trend direction
-        if supertrend[curr] == True:
-            final_upperband[curr] = np.nan
-        else:
-            final_lowerband[curr] = np.nan
+#         # to remove bands according to the trend direction
+#         if supertrend[curr] == True:
+#             final_upperband[curr] = np.nan
+#         else:
+#             final_lowerband[curr] = np.nan
     
-    return pd.DataFrame({
-        'Supertrend': supertrend,
-        'Final Lowerband': final_lowerband,
-        'Final Upperband': final_upperband
-    }, index=df.index)
+#     return pd.DataFrame({
+#         'Supertrend': supertrend,
+#         'Final Lowerband': final_lowerband,
+#         'Final Upperband': final_upperband
+#     }, index=df.index)
     
     
-atr_period = 7
-atr_multiplier = 3
+# atr_period = 7
+# atr_multiplier = 3
 
 
-supertrend = Supertrend(df, atr_period, atr_multiplier)
-df = df.join(supertrend)
+# supertrend = Supertrend(df, atr_period, atr_multiplier)
+# df = df.join(supertrend)
 
-# Fast Double Supertrend
-st_1 = Supertrend(df1, 14, 2)
-df1 = df1.join(st_1)
-st_2 = Supertrend(df2, 21, 1)
-df2 = df2.join(st_2)
+# # Fast Double Supertrend
+# st_1 = Supertrend(df1, 14, 2)
+# df1 = df1.join(st_1)
+# st_2 = Supertrend(df2, 21, 1)
+# df2 = df2.join(st_2)
 
-# Slow Double Supertrend
-st_3 = Supertrend(df3, 21, 3)
-df3 = df3.join(st_3)
-st_4 = Supertrend(df4, 20, 7)
-df4 = df4.join(st_4)
+# # Slow Double Supertrend
+# st_3 = Supertrend(df3, 21, 3)
+# df3 = df3.join(st_3)
+# st_4 = Supertrend(df4, 20, 7)
+# df4 = df4.join(st_4)
 
-# Calculate the 9SMA and 20SMA
-df['5SMA'] = df['Close'].rolling(window=5).mean()
-df['9SMA'] = df['Close'].rolling(window=9).mean()
-df['20SMA'] = df['Close'].rolling(window=20).mean()
-df['50SMA'] = df['Close'].rolling(window=50).mean()
-df['200SMA'] = df['Close'].rolling(window=200).mean()
-rolling_std = df['Close'].rolling(window=20).std()
-df['upper_band'] = df['20SMA'] + (rolling_std * 2)
-df['lower_band'] = df['20SMA'] - (rolling_std * 2)
+# # Calculate the 9SMA and 20SMA
+# df['5SMA'] = df['Close'].rolling(window=5).mean()
+# df['9SMA'] = df['Close'].rolling(window=9).mean()
+# df['20SMA'] = df['Close'].rolling(window=20).mean()
+# df['50SMA'] = df['Close'].rolling(window=50).mean()
+# df['200SMA'] = df['Close'].rolling(window=200).mean()
+# rolling_std = df['Close'].rolling(window=20).std()
+# df['upper_band'] = df['20SMA'] + (rolling_std * 2)
+# df['lower_band'] = df['20SMA'] - (rolling_std * 2)
 
-# Calculate Williams Alligator indicator
-def calculate_alligator(df, jaw_length, teeth_length, lips_length):
-    df['jaw'] = df['Close'].rolling(window=jaw_length).mean().shift(jaw_length * -1)
-    df['teeth'] = df['Close'].rolling(window=teeth_length).mean().shift(teeth_length * -1)
-    df['lips'] = df['Close'].rolling(window=lips_length).mean().shift(lips_length * -1)
-    return df
+# # Calculate Williams Alligator indicator
+# def calculate_alligator(df, jaw_length, teeth_length, lips_length):
+#     df['jaw'] = df['Close'].rolling(window=jaw_length).mean().shift(jaw_length * -1)
+#     df['teeth'] = df['Close'].rolling(window=teeth_length).mean().shift(teeth_length * -1)
+#     df['lips'] = df['Close'].rolling(window=lips_length).mean().shift(lips_length * -1)
+#     return df
 
-jaw_length = 13
-teeth_length = 8
-lips_length = 5
-data = calculate_alligator(df, jaw_length, teeth_length, lips_length)
+# jaw_length = 13
+# teeth_length = 8
+# lips_length = 5
+# data = calculate_alligator(df, jaw_length, teeth_length, lips_length)
 
 # Fractals
 def find_fractals(data):
@@ -297,42 +297,42 @@ def find_fractals_9(data):
 fractals9 = find_fractals_9(df)
 
 
-# Function to add Fibonacci retracement lines
-# Add Fibonacci retracement lines to the chart
-low_price = min(df['Low'])
-high_price = max(df['High'])
+# # Function to add Fibonacci retracement lines
+# # Add Fibonacci retracement lines to the chart
+# low_price = min(df['Low'])
+# high_price = max(df['High'])
 
-def add_fibonacci_retracement(fig, low, high, start_date, end_date):
-    levels = [0, 0.382, 0.5, 0.618, 0.786, 1]
-    diff = high - low
-    for level in levels:
-        price = high - level * diff
-        fig.add_shape(
-            go_objs.layout.Shape(
-                type='line',
-                x0=start_date,
-                y0=price,
-                x1=end_date,
-                y1=price,
-                line=dict(color='grey', dash='dash')
-            )
-        )
+# def add_fibonacci_retracement(fig, low, high, start_date, end_date):
+#     levels = [0, 0.382, 0.5, 0.618, 0.786, 1]
+#     diff = high - low
+#     for level in levels:
+#         price = high - level * diff
+#         fig.add_shape(
+#             go_objs.layout.Shape(
+#                 type='line',
+#                 x0=start_date,
+#                 y0=price,
+#                 x1=end_date,
+#                 y1=price,
+#                 line=dict(color='grey', dash='dash')
+#             )
+#         )
 
-def add_fibonacci_extension(fig, low, high, start_date, end_date):
-    levels = [1, 1.618, 2.0, 2.618]
-    diff = high - low
-    for level in levels:
-        price = high + level * diff
-        fig.add_shape(
-            go_objs.layout.Shape(
-                type='line',
-                x0=start_date,
-                y0=high,
-                x1=end_date,
-                y1=price,
-                line=dict(color='grey', dash='dash')
-            )
-        )
+# def add_fibonacci_extension(fig, low, high, start_date, end_date):
+#     levels = [1, 1.618, 2.0, 2.618]
+#     diff = high - low
+#     for level in levels:
+#         price = high + level * diff
+#         fig.add_shape(
+#             go_objs.layout.Shape(
+#                 type='line',
+#                 x0=start_date,
+#                 y0=high,
+#                 x1=end_date,
+#                 y1=price,
+#                 line=dict(color='grey', dash='dash')
+#             )
+#         )
 
 # Keltner Channel
 df.ta.kc(append=True)
@@ -540,23 +540,23 @@ def create_plot(df, indicators):
         # elif indicator == 'PSAR':
         #     fig.add_trace(go.Scatter(x=dates, y=df["psarbull"], name='buy',mode = 'markers', marker = dict(color='green', size=2)))
         #     fig.add_trace(go.Scatter(x=dates, y=df["psarbear"], name='sell', mode = 'markers',marker = dict(color='red', size=2)))
-        elif indicator == 'Supertrend':
-            fig.add_trace(go.Scatter(x=df.index, y=df['Final Lowerband'], name='Supertrend Lower Band', line = dict(color='green', width=2)))
-            fig.add_trace(go.Scatter(x=df.index, y=df['Final Upperband'], name='Supertrend Upper Band', line = dict(color='red', width=2)))
-        elif indicator == 'Fast Double Supertrend':
-            fig.add_trace(go.Scatter(x=df1.index, y=df1['Final Lowerband'], name='Supertrend Fast Lower Band', line = dict(color='blue', width=2)))
-            fig.add_trace(go.Scatter(x=df1.index, y=df1['Final Upperband'], name='Supertrend Fast Upper Band', line = dict(color='purple', width=2)))
-            fig.add_trace(go.Scatter(x=df2.index, y=df2['Final Lowerband'], name='Supertrend Slow Lower Band',line = dict(color='green', width=2)))
-            fig.add_trace(go.Scatter(x=df2.index, y=df2['Final Upperband'], name='Supertrend Slow Upper Band',line = dict(color='red', width=2)))
-        elif indicator == 'Slow Double Supertrend':
-            fig.add_trace(go.Scatter(x=df3.index, y=df3['Final Lowerband'], name='Supertrend Fast Lower Band', line = dict(color='blue', width=2)))
-            fig.add_trace(go.Scatter(x=df3.index, y=df3['Final Upperband'], name='Supertrend Fast Upper Band', line = dict(color='purple', width=2)))
-            fig.add_trace(go.Scatter(x=df4.index, y=df4['Final Lowerband'], name='Supertrend Slow Lower Band',line = dict(color='green', width=2)))
-            fig.add_trace(go.Scatter(x=df4.index, y=df4['Final Upperband'], name='Supertrend Slow Upper Band',line = dict(color='red', width=2)))
-        elif indicator == 'SMA Ribbons':
-            fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
-            fig.add_trace(go.Scatter(x=df.index, y=df['9SMA'], name='9 SMA', line=dict(color='blue', width=2)))
-            fig.add_trace(go.Scatter(x=df.index, y=df['50SMA'], name='50 SMA', line=dict(color='green', width=2)))
+        # elif indicator == 'Supertrend':
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['Final Lowerband'], name='Supertrend Lower Band', line = dict(color='green', width=2)))
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['Final Upperband'], name='Supertrend Upper Band', line = dict(color='red', width=2)))
+        # elif indicator == 'Fast Double Supertrend':
+        #     fig.add_trace(go.Scatter(x=df1.index, y=df1['Final Lowerband'], name='Supertrend Fast Lower Band', line = dict(color='blue', width=2)))
+        #     fig.add_trace(go.Scatter(x=df1.index, y=df1['Final Upperband'], name='Supertrend Fast Upper Band', line = dict(color='purple', width=2)))
+        #     fig.add_trace(go.Scatter(x=df2.index, y=df2['Final Lowerband'], name='Supertrend Slow Lower Band',line = dict(color='green', width=2)))
+        #     fig.add_trace(go.Scatter(x=df2.index, y=df2['Final Upperband'], name='Supertrend Slow Upper Band',line = dict(color='red', width=2)))
+        # elif indicator == 'Slow Double Supertrend':
+        #     fig.add_trace(go.Scatter(x=df3.index, y=df3['Final Lowerband'], name='Supertrend Fast Lower Band', line = dict(color='blue', width=2)))
+        #     fig.add_trace(go.Scatter(x=df3.index, y=df3['Final Upperband'], name='Supertrend Fast Upper Band', line = dict(color='purple', width=2)))
+        #     fig.add_trace(go.Scatter(x=df4.index, y=df4['Final Lowerband'], name='Supertrend Slow Lower Band',line = dict(color='green', width=2)))
+        #     fig.add_trace(go.Scatter(x=df4.index, y=df4['Final Upperband'], name='Supertrend Slow Upper Band',line = dict(color='red', width=2)))
+        # elif indicator == 'SMA Ribbons':
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['5SMA'], name='5 SMA', line=dict(color='purple', width=2)))
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['9SMA'], name='9 SMA', line=dict(color='blue', width=2)))
+        #     fig.add_trace(go.Scatter(x=df.index, y=df['50SMA'], name='50 SMA', line=dict(color='green', width=2)))
         elif indicator == 'Bollinger Bands':
             fig.add_trace(go.Scatter(x=df.index, y=df['20SMA'], name='20 SMA', line=dict(color='black', width=2)))
             fig.add_trace(go.Scatter(x=df.index, y=df['upper_band'], name='Upper BB', line=dict(color='black', width=2)))
@@ -639,20 +639,20 @@ def create_plot(df, indicators):
         elif indicator == "Gann High Low":
             fig.add_trace(go.Scatter(x=df.index,y=df['HILOl_13_21'], mode='markers',marker=dict(color='green',symbol='star'),name='Gann High'))
             fig.add_trace(go.Scatter(x=df.index,y=df['HILOs_13_21'], mode='markers',marker=dict(color='red',symbol='star'),name='Gann Low'))
-        elif indicator == "Alligator":
-            fig.add_trace(go.Scatter(x=data.index, y=data['jaw'], mode='lines', name='Jaw', line=dict(color='red')))
-            fig.add_trace(go.Scatter(x=data.index, y=data['teeth'], mode='lines', name='Teeth', line=dict(color='green')))
-            fig.add_trace(go.Scatter(x=data.index, y=data['lips'], mode='lines', name='Lips', line=dict(color='blue')))
+        # elif indicator == "Alligator":
+        #     fig.add_trace(go.Scatter(x=data.index, y=data['jaw'], mode='lines', name='Jaw', line=dict(color='red')))
+        #     fig.add_trace(go.Scatter(x=data.index, y=data['teeth'], mode='lines', name='Teeth', line=dict(color='green')))
+        #     fig.add_trace(go.Scatter(x=data.index, y=data['lips'], mode='lines', name='Lips', line=dict(color='blue')))
         elif indicator == "Fractals":
             for date, price, marker_type in fractals:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
         elif indicator == "9 Period Fractals":
             for date, price, marker_type in fractals9:
                 fig.add_trace(go.Scatter(x=[date], y=[price], mode='markers', marker=dict(color='red' if marker_type == 'peak' else 'green'), name=marker_type))
-        elif indicator == "Fibonacci Retracements":
-            add_fibonacci_retracement( fig, low_price, high_price, start, end)
-        elif indicator == "Fibonacci Extensions":
-            add_fibonacci_extension( fig, low_price, high_price, start, end)
+        # elif indicator == "Fibonacci Retracements":
+        #     add_fibonacci_retracement( fig, low_price, high_price, start, end)
+        # elif indicator == "Fibonacci Extensions":
+        #     add_fibonacci_extension( fig, low_price, high_price, start, end)
         elif indicator == "FVG":
             fig.add_trace(go.Scatter(x=df.index, y=df['FairValueGap'], mode='markers', name='Fair Value Gap'))
         elif indicator == "TD Sequential":
@@ -771,7 +771,7 @@ quarterly_cashflow_statement = symbol.quarterly_cash_flow
 tab1, tab2 = st.tabs(['Technical Analysis' , "Fundamental Analysis"])
 
 with tab1:
-    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' , 'MACD', 'ATR', 'ADX', 'Supertrend', 'Fast Double Supertrend', 'Slow Double Supertrend', 'SMA Ribbons', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Alligator" ,"Fractals", "9 Period Fractals" ,"Fibonacci Retracements", "Fibonacci Extensions", "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
+    indicators = ['Candlestick Chart', 'Heikin Ashi Candles', 'RSI' , 'MACD', 'ATR', 'ADX', 'Bollinger Bands', "Zero Lag MA Ribbons", "Keltner Channels", "Squeeze Momentum Indicator Pro", "QQE MOD", "Stochastic RSI", "Stochastic Oscillator", "M Stochastic" ,"Hull Moving Averages", "EMA Ribbons", "EMA Crossover", "Mulit Moving Averages Strategy" ,"MACD Moving Averages" ,"200 EMA", "200 SMA", "100 HMA", "200 HMA", "240 ZLMA", 'Market Bias', "Awesome Oscillator", "Swing High Swing Low", "Donchian Channels", 'Z Score',"Gann High Low", "Fractals", "9 Period Fractals" , "FVG" ,"TD Sequential", "Linear Regression", "Know Sure Thing", "Relative Vigor Index" ,"Half Trend", "Decycler" ,"Engulfing Candles", "Doji Candles", "Dragonfly Doji Candles", "Gravestone Doji Candles", "Hammer Candles", "Inverted Hammer Candles", "Morning Star Candles", "Evening Star Candles", "Abandoned Baby Candles", "Hanging Man Candles", "3 White Soldiers", "3 Black Crows", "3 Line Strike", "Shooting Star", "Tristar"]
     default_options = ['Candlestick Chart', 'RSI', 'MACD', "Squeeze Momentum Indicator Pro", "M Stochastic", "200 EMA", "EMA Crossover", "Swing High Swing Low"]
     selected_indicators = st.multiselect('Select Indicators', indicators, default = default_options)
     st.header("Technical Analysis")
